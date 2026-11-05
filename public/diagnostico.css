@@ -1,0 +1,23 @@
+.diag-tool{max-width:74rem;margin:auto}
+.diag-form,.diag-output{margin:1.2rem 0}
+.diag-form>label,.diag-form>small{display:block;margin:.8rem 0}
+.diag-form label.check{display:flex;align-items:center;gap:.6rem}
+.diag-form .check input{width:auto}
+.diag-uploads,.diag-summary{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(min(15rem,100%),1fr))}
+.diag-uploads label,.diag-summary>div,.diag-fold{min-width:0;padding:.85rem 1rem;border:1px solid var(--line);border-radius:.75rem;background:var(--card)}
+.diag-uploads input{width:100%;margin:.4rem 0}
+.diag-form small,.diag-items small,.diag-summary small{display:block;color:var(--muted)}
+.diag-form [role=alert]{color:var(--ink);font-weight:700}
+.diag-result-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.7rem}
+.diag-result-head h2{scroll-margin-top:2rem}
+.diag-summary{margin:.85rem 0;grid-template-columns:repeat(3,minmax(0,1fr))}
+.diag-summary strong{display:block;color:var(--ink);font-size:1.35rem}
+.diag-next{padding:.9rem 1rem;background:var(--lilac);border-radius:.6rem}
+.diag-next b{display:block}
+.diag-fold{margin:.6rem 0}
+.diag-fold summary{cursor:pointer;font-weight:700}
+.diag-items{list-style:none;padding:0}
+.diag-items li{padding:.65rem 0;overflow-wrap:anywhere}
+.diag-items li+li{border-top:1px solid var(--line)}
+.diag-items p,.diag-items small{margin:.25rem 0}
+@media(max-width:560px){.diag-summary{grid-template-columns:1fr}.diag-summary>div{display:flex;align-items:center;justify-content:space-between;gap:1rem}.diag-form .actions{flex-direction:column;align-items:stretch}}

@@ -1,0 +1,29 @@
+.kw-groups{display:flex;gap:.45rem;flex-wrap:wrap;margin:1.1rem 0 .9rem}
+.step-intro h1[tabindex="-1"]:focus-visible{width:fit-content;outline:2px dotted #71569c;outline-offset:4px}
+.kw-group{border:1px solid #c9c3d4;border-radius:.75rem;padding:.66rem 1rem;display:inline-flex;align-items:center;gap:.65rem;background:#fff;color:#4e4162;font-weight:700}
+.kw-group span{font-variant-numeric:tabular-nums;border-radius:.4rem;padding:.05rem .45rem;background:#eeebf3;color:#4b4257}
+.kw-group[aria-pressed=true]{background:#514079;border-color:#514079;color:white}
+.kw-group[aria-pressed=true] span{background:#705b95;color:white}
+.kw-explanation{border-left:3px solid #9274bc;padding-left:.9rem;margin:1rem 0}
+.kw-explanation h3{margin:0 0 .4rem}.kw-explanation p{margin:0;max-width:75ch}
+.kw-table{width:100%;min-width:0;border-collapse:collapse;font-size:.88rem}
+.kw-table thead th{white-space:normal;font-size:.78rem}
+.kw-table tbody th{font:inherit;text-align:left;vertical-align:top;min-width:13rem;border-bottom:1px solid var(--line);padding:.85rem .6rem}
+.kw-table tbody th small{display:block;color:var(--muted);font-size:.75rem}
+.kw-table .num{white-space:nowrap;font-variant-numeric:tabular-nums}
+.kw-tags{display:flex;gap:.35rem;flex-wrap:wrap;margin:.25rem 0}
+.badge.kw-longtail{color:#60384e;background:#f5dfe8}
+.kw-proof,.kw-plan{background:#f5f2f9;border-radius:.85rem;padding:1rem;margin-block:1rem}
+.kw-proof p{margin:0 0 .5rem}.kw-plan{display:grid;gap:.7rem}
+.kw-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(5.8rem,1fr));gap:.6rem;margin:.8rem 0}
+.kw-metrics div{padding:.6rem .7rem;border:1px solid var(--line);border-radius:.65rem;min-width:0}
+.kw-metrics small,.kw-metrics strong{display:block}.kw-metrics strong{font-size:1.15rem}
+.kw-help{margin:.9rem 0}.kw-help summary{cursor:pointer}
+@media(max-width:860px){
+  .kw-table,.kw-table tbody{display:block;min-width:0}
+  .kw-table thead{position:absolute;clip:rect(0,0,0,0);clip-path:inset(50%);width:1px;height:1px;overflow:hidden}
+  .kw-table tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem .8rem;padding:.85rem 0;border-bottom:1px solid var(--line)}
+  .kw-table tbody th{grid-column:1/-1;padding:0;min-width:0;border:0}
+  .kw-table .num{padding:0;border:0;text-align:left;min-width:0;white-space:normal;display:block}
+  .kw-table .num:before{content:attr(data-label);color:var(--muted);font-size:.72rem;display:block}
+}

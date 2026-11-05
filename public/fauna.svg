@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 146">
+  <defs>
+    <g id="mark"><path d="m0-5 1.5 3.5L5 0 1.5 1.5 0 5-1.5 1.5-5 0l3.5-1.5Z" fill="#FFE08C" stroke="#4D4356" stroke-width="1.3"/></g>
+    <g id="toe"><path d="M0 0q1-3 2-4m3 4 1-4" fill="none" stroke="#8A706B" stroke-width="1.4" stroke-linecap="round"/></g>
+    <symbol id="guia" viewBox="0 0 180 146">
+      <path d="M17 95C5 64 30 29 66 24c34-6 76-4 90 22 21 39-1 76-38 82-38 8-89 0-101-33Z" fill="#E4DEF8"/>
+      <ellipse cx="88" cy="125" rx="54" ry="6" fill="#D5CADE"/>
+      <g stroke="#493B55" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M112 99c21 17 38-3 27-19-6-8-17-2-13 5 5 8 11 1 9-2" fill="#E9A481"/>
+        <path d="M63 83c-10 10-13 24-10 35 2 7 10 8 20 6l4-6c8 4 18 5 26 0 6 7 19 6 21-1s-4-26-14-34" fill="#EFBC93"/>
+        <path d="M64 95c6 1 9 11 8 21m31-22-1 20" fill="none"/>
+        <path d="M54 51c-3-9-8-28-5-31 4-3 18 6 25 10 8-5 18-6 28-4 5-6 13-15 17-14s2 22 1 29c7 13 8 24 1 35-11 18-45 24-63 11-13-9-13-24-4-36Z" fill="#F4C8A1"/>
+        <path d="m53 28 4 17 10-10m42-3 8-11-1 15" fill="#D88E87" stroke="none"/>
+        <path d="M79 29 83 39m1-11 5 8m28 29-9 2m10 3-7 3M56 63l9 1m-10 4 7 1" stroke="#C68C64" stroke-width="3"/>
+        <path d="M69 55q4-4 9-1m15-3q3-4 8-3" fill="none" stroke-width="1.5"/>
+        <ellipse cx="75" cy="61" rx="3" ry="4" fill="#493B55" stroke="none"/><ellipse cx="99" cy="57" rx="3" ry="4" fill="#493B55" stroke="none"/>
+        <path d="m84 65 5-1-2 3Z" fill="#493B55"/><path d="M81 71q6 6 12-2" fill="none" stroke-width="1.8"/>
+        <path d="m60 74-12 2m14 2-10 5m59-18 12-2m-12 6 10 1" fill="none" stroke-width="1.5"/>
+        <path d="M60 88q23 14 52-4l3 7c-8 2-15 4-21 5l-10 14-4-12q-11 1-18-3Z" fill="#9581C6"/>
+        <g transform="rotate(-12 54 111)"><rect x="29" y="96" width="43" height="29" rx="4" fill="#FFFCF4"/><path d="M38 104h24m-24 6h16m-16 6h20" stroke="#B1A0BE" stroke-width="2"/><path d="M38 92v8m21-8v8"/></g>
+        <path d="M62 98q-8-4-9 3c-1 7 8 11 13 6" fill="#EFBC93"/>
+      </g>
+      <use href="#mark" x="142" y="39"/><use href="#mark" x="32" y="78"/>
+    </symbol>
+    <symbol id="buho" viewBox="0 0 180 146">
+      <path d="M17 80c-1-32 20-48 50-53 43-8 73-4 91 26 17 31 3 62-30 70-41 12-111 6-111-43Z" fill="#DCECE9"/>
+      <ellipse cx="91" cy="125" rx="54" ry="6" fill="#CFDAD8"/>
+      <g stroke="#493B55" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M51 65c-8-9-13-27-9-31 5-4 19 6 26 10 12-6 31-7 46-3 8-6 22-14 27-10 3 4-2 19-8 29 10 25 3 53-21 62-24 10-56 2-65-17-6-15-4-27 4-40Z" fill="#A79BCB"/>
+        <path d="M58 94c8-12 25-17 40-14 17 3 23 17 20 34-7 9-20 12-35 10-17-1-28-12-25-30Z" fill="#E7DFF1" stroke="none"/>
+        <path d="M49 75q-10 24 3 30c7-1 12-12 12-17m62-14q17 20 5 29c-5-1-9-7-13-14" fill="#8F81B7"/>
+        <path d="M65 57q7-9 16-6m21-1q10-7 18 0" fill="none"/>
+        <circle cx="70" cy="70" r="17" fill="#F8F3EA"/><circle cx="111" cy="67" r="17" fill="#F8F3EA"/><path d="M87 66q3-4 7-1"/>
+        <ellipse cx="72" cy="71" rx="3.6" ry="4.9" fill="#493B55" stroke="none"/><ellipse cx="109" cy="68" rx="3.6" ry="4.9" fill="#493B55" stroke="none"/>
+        <path d="m84 78 12-2-4 10Z" fill="#FFB56E"/>
+        <path d="M65 123q-7 5-3 7 7 3 17-3m22-1q0 7 6 6l8-6" fill="#EBC284"/>
+        <path d="m75 96 4 4 3-4m7 4 4 4 3-4m6-6 4 3 3-4" fill="none" stroke="#BAA7C7" stroke-width="2"/>
+        <g transform="rotate(12 134 100)"><rect x="117" y="82" width="29" height="41" rx="4" fill="#FCFAF4"/><path d="M126 79h11v7h-11z" fill="#88B7AE"/><path d="m122 94 3 3 5-6m3 4h6m-17 10 3 3 5-6m3 3h6" fill="none" stroke-width="1.7"/></g>
+      </g><use href="#mark" x="25" y="59"/>
+    </symbol>
+    <symbol id="explora" viewBox="0 0 180 146">
+      <path d="M16 90c-4-38 24-61 57-67 34-7 69 1 82 31 16 32-1 61-30 72-41 12-103 1-109-36Z" fill="#F9E9C9"/>
+      <ellipse cx="87" cy="125" rx="53" ry="6" fill="#E4D5C0"/>
+      <g stroke="#493B55" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M65 105c-21 26-47 6-39-12 4-12 16-10 17-2s-7 13-10 9" fill="#DFB399"/>
+        <path d="M65 79c-13 13-19 33-12 43 4 6 15 3 23-1 7 3 17 3 24 0 11 4 22 1 22-4-1-11-10-29-21-37Z" fill="#F9E9D2"/>
+        <path d="M57 46q-10-18-6-25 4-3 24 9c10-4 20-4 30-2 6-5 17-15 20-10s-1 21-3 29c8 15 7 29-5 38-18 14-46 13-61 0-11-11-11-25 1-39Z" fill="#F9E9D2"/>
+        <path d="M54 25q-1 17 7 21c6-7 12-10 20-13q-10-6-16-5l-9-5Z" fill="#CE8F71" stroke="none"/>
+        <path d="M102 31q6 13 18 20l-1-5 3-21-7 5Z" fill="#89778F" stroke="none"/>
+        <path d="M60 91q20 9 45-3l3 7-14 6-8 12-6-11-17-4Z" fill="#7BAFA7"/>
+        <path d="M65 58q5-6 10-3m21-2q5-5 10-1" fill="none" stroke-width="1.7"/>
+        <ellipse cx="72" cy="63" rx="3.3" ry="4.2" fill="#493B55" stroke="none"/><ellipse cx="102" cy="60" rx="3.3" ry="4.2" fill="#493B55" stroke="none"/>
+        <path d="m84 66 5-1-2 3Z" fill="#493B55"/><path d="M81 72q5 5 12-2m-29 2-12 3m12 0-9 5m55-16 10-2" fill="none" stroke-width="1.6"/>
+        <path d="m109 95 11-14 6 4-12 17Z" fill="#9A86BD"/>
+        <circle cx="131" cy="68" r="21" fill="#F4CA71"/><circle cx="131" cy="68" r="15" fill="#F1F4E9"/><path d="M122 66q2-7 7-9" fill="none" stroke="#A8C0B2"/>
+        <path d="M102 97q4-7 10-7l6 5q0 9-14 12" fill="#F9E9D2"/>
+        <use href="#toe" x="57" y="122"/><use href="#toe" x="100" y="121"/>
+      </g><use href="#mark" x="30" y="51"/><use href="#mark" x="149" y="99"/>
+    </symbol>
+    <symbol id="conejo" viewBox="0 0 180 146">
+      <path d="M20 88c-7-23 6-50 33-62 20-9 45-7 67 1 32 11 46 33 41 58-7 36-42 50-80 47-29-2-52-13-61-44Z" fill="#EBE1F2"/>
+      <ellipse cx="87" cy="125" rx="55" ry="6" fill="#D7CDDC"/>
+      <g stroke="#493B55" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="47" cy="105" r="12" fill="#F8F1E1"/>
+        <path d="M60 81c-11 15-17 35-8 42 6 4 14 2 20-2 12 3 21 3 29-1 8 7 23 5 24-1s-12-30-22-39" fill="#F4E9CF"/>
+        <path d="M59 51c-8-12-16-40-9-43 7-5 22 18 29 33 5-1 11-1 17 0 3-12 9-36 17-35 9 2 7 24 3 44 11 9 15 25 6 36-14 17-49 18-65 4-12-11-11-29 2-39Z" fill="#FFF4DD"/>
+        <path d="M58 22q8 17 11 24m42-26-5 23" stroke="#E4B3B4" stroke-width="5.5"/>
+        <ellipse cx="71" cy="67" rx="3.3" ry="4" fill="#493B55" stroke="none"/><ellipse cx="102" cy="65" rx="3.3" ry="4" fill="#493B55" stroke="none"/>
+        <path d="m85 72 5-1-2 3Z" fill="#D89DA7" stroke-width="1.6"/><path d="M81 77q3 5 7-2 2 5 6 1" fill="none" stroke-width="1.7"/>
+        <path d="M64 77q-5 1-8 3m51-5q6-2 10-1" stroke="#CCA4AA" stroke-width="2"/>
+        <path d="M60 92q24 9 48-3l3 7-14 5-8 11-6-10-19-4Z" fill="#B593C2"/>
+        <g transform="rotate(28 121 89)"><path d="m117 59h9l1 51-5 12-5-12Z" fill="#F2BD74"/><path d="m117 109 10 1-5 12Z" fill="#F7DEB9"/><path d="m121 118 2 0-1 4Z" fill="#493B55"/><path d="M117 60v-5q4-5 9 0v5Z" fill="#C897AC"/></g>
+        <path d="M99 100q6-7 13-6l4 5q-1 9-15 13" fill="#FFF4DD"/>
+        <path d="m60 124 57-10 27 9-56 13Z" fill="#FFFDF6"/><path d="m75 124 36-5m-28 9 32-5" stroke="#C4B5C0" stroke-width="1.2"/>
+      </g><use href="#mark" x="144" y="39"/>
+    </symbol>
+    <symbol id="mide" viewBox="0 0 180 146">
+      <path d="M16 83c0-31 28-57 64-62 47-5 76 20 83 53 8 40-23 55-65 57-45 2-79-14-82-48Z" fill="#DBE6F4"/>
+      <ellipse cx="89" cy="126" rx="57" ry="6" fill="#CBD4E3"/>
+      <g stroke="#493B55" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M113 106c13 8 25 0 24-12-2-12-16-14-17-5 0 5 5 6 7 3" fill="#9CA9BE"/>
+        <path d="M65 80c-16 15-20 35-11 43 3 3 14 1 21-3 9 2 15 2 24 0 10 5 22 4 24-3 1-12-9-29-19-38Z" fill="#B8C3D1"/>
+        <path d="m56 47-3-25q1-6 24 7c9-3 18-3 27-1 7-5 18-14 22-12 2 3 0 20-4 29 10 15 7 29-6 40-17 13-47 12-61-2-9-9-9-25 1-36Z" fill="#C8D3DE"/>
+        <path d="m57 28 2 13 10-9m42 1 10-10-3 15" fill="#C796A6" stroke="none"/>
+        <path d="m78 31 4 9m5-10 2 8m25 23-10 3m12 3-8 3M54 61l9 3m-10 3 8 2" stroke="#8797AD" stroke-width="3.2"/>
+        <path d="M68 59q4-5 8-1m18-4q4-5 9-2" fill="none" stroke-width="1.6"/>
+        <ellipse cx="73" cy="65" rx="3" ry="4" fill="#493B55" stroke="none"/><ellipse cx="100" cy="60" rx="3" ry="4" fill="#493B55" stroke="none"/>
+        <path d="m84 69 5-1-2 3Z" fill="#493B55"/><path d="M81 74q6 5 11-2" fill="none" stroke-width="1.7"/>
+        <path d="m60 88 15 3-8 19-7-4m44-17-14 5 8 13 10-6" fill="#82AAB1"/><path d="m76 92 13 1-5 9-7-4Z" fill="#F5CC76"/>
+        <g transform="rotate(-11 67 112)"><rect x="33" y="95" width="65" height="29" rx="3" fill="#F7DA96"/><path d="m40 96v9m7-9v5m7-5v9m7-9v5m7-5v9m7-9v5m7-5v9m7-9v5" stroke-width="1.5"/></g>
+        <path d="M65 98q-9-3-10 5 2 8 11 6" fill="#C8D3DE"/><use href="#toe" x="99" y="122"/>
+      </g><use href="#mark" x="145" y="47"/>
+    </symbol>
+    <symbol id="tortuga" viewBox="0 0 180 146">
+      <path d="M17 85C9 54 35 31 70 28c48-6 78 0 91 36 13 38-23 61-64 66-39 4-72-9-80-45Z" fill="#E1EBDA"/>
+      <ellipse cx="91" cy="123" rx="61" ry="6" fill="#CAD8C6"/>
+      <g stroke="#493B55" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M39 101 23 94q-5 8 16 14" fill="#ABC595"/>
+        <path d="M49 95c-7 7-13 23-6 27 4 0 15-4 20-14m33-4c-3 7-3 18 3 20 7 0 16-9 17-20" fill="#B7CE9D"/>
+        <path d="M36 99c1-32 16-53 43-54 26-2 45 16 48 51l-4 10c-30 11-54 11-84 0Z" fill="#98B69C"/>
+        <path d="m48 83 12-24 23-7 17 14 6 24-17 13-26-1z" fill="#BCCD9B" stroke="#718D79" stroke-width="2"/>
+        <path d="m62 60 3 18 22 6 12-18m-13 18 2 17M65 79 50 87" stroke="#789782" fill="none" stroke-width="2"/>
+        <path d="M99 89c6-13 7-27 19-37 11-9 26-6 34 5 11 16 5 36-12 44-10 4-21 4-32 7" fill="#CCDBAB"/>
+        <ellipse cx="139" cy="68" rx="3.2" ry="4.3" fill="#493B55" stroke="none"/><path d="M133 59q4-4 9-2m-2 24q7 1 11-4" fill="none" stroke-width="1.7"/>
+        <path d="m112 48 2-11 15-4 9 4 3 9-9 6Z" fill="#A993C4"/>
+        <path d="m112 48 26-4 9 2" fill="none"/>
+      </g><use href="#mark" x="50" y="36"/><use href="#mark" x="25" y="75"/>
+    </symbol>
+  </defs>
+  <use href="#guia" width="180" height="146"/>
+</svg>

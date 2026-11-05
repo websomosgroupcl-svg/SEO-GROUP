@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 248" role="img" aria-labelledby="title desc">
+  <title id="title">Dónde conceder acceso y copiar el identificador de GA4</title>
+  <desc id="desc">Ilustración. En Administrar, abre Gestión de accesos a la propiedad, añade la cuenta como Lector. En Detalles de la propiedad encuentra el ID numérico, por ejemplo 123456789.</desc>
+  <rect width="480" height="248" rx="14" fill="#f1edf9"/>
+  <g font-family="Arial,sans-serif">
+    <rect x="20" y="16" width="440" height="211" rx="10" fill="white" stroke="#c4bfd1"/>
+    <text x="36" y="46" font-size="20" font-weight="bold" fill="#29273e">Google Analytics</text>
+    <text x="36" y="73" font-size="14" fill="#47445b">Administrar  ›  Propiedad</text>
+    <rect x="36" y="87" width="408" height="50" rx="6" fill="#fbfafc" stroke="#d3cedd"/>
+    <text x="48" y="108" font-size="15" font-weight="bold" fill="#29273e">Gestión de accesos a la propiedad</text>
+    <text x="48" y="127" font-size="13" fill="#47445b">Añadir usuarios  ›  Lector</text>
+    <text x="38" y="163" font-size="14" fill="#47445b">Detalles de la propiedad</text>
+    <rect x="36" y="174" width="408" height="38" rx="6" fill="#f1edf9" stroke="#7556ab"/>
+    <text x="47" y="198" font-size="15" fill="#443472">ID de propiedad</text>
+    <text x="284" y="199" font-size="19" font-weight="bold" fill="#443472">123456789</text>
+  </g>
+</svg>

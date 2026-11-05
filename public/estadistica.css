@@ -1,0 +1,24 @@
+.stat-report{margin-block:1.6rem;min-width:0}
+.stat-report>header{max-width:72ch}
+.stat-report h3,.stat-report h4{margin:.3rem 0;color:var(--ink)}
+.stat-report h3{font-size:clamp(1.4rem,3vw,1.8rem)}
+.stat-report h4{font-size:1.13rem}
+.stat-report header p:not(.eyebrow){margin:.3rem 0 .8rem}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(25rem,100%),1fr));gap:.8rem}
+.stat-metric{min-width:0;padding:1rem;border:1px solid var(--line);border-radius:.9rem;background:var(--card)}
+.stat-report .stat-date,.stat-report small{color:var(--muted);font-size:.82rem;line-height:1.5}
+.stat-periods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem}
+.stat-period{min-width:0;padding:.7rem .8rem;border:1px solid var(--line);border-radius:.65rem;overflow-wrap:anywhere}
+.stat-period p{margin:.25rem 0 .5rem;font-size:.88rem;line-height:1.45}
+.stat-period p:last-child{margin-bottom:0}
+.stat-estimate{border-style:dashed;background:var(--lilac)}
+.stat-period .stat-label,.stat-confidence{font-weight:700;color:var(--accent)}
+.stat-period .stat-value{margin:.35rem 0 .1rem;font-size:1.4rem;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.2}
+.stat-value span{font-size:.85rem}
+.stat-period .stat-date{margin-top:.1rem}
+.stat-action{font-size:.9rem;line-height:1.5}
+.stat-action strong{display:block}
+.stat-validation{margin:.8rem 0 0;color:var(--muted);font-size:.86rem;line-height:1.5}
+.stat-validation summary{color:var(--ink);cursor:pointer;font-weight:650;padding:.3rem 0}
+.stat-validation p{margin:.35rem 0}
+@media(max-width:560px){.stat-periods{grid-template-columns:1fr}.stat-metric{padding:.8rem}}
