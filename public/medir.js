@@ -1,5 +1,5 @@
 import {animal, companion} from './companions.js';
-import {intentGraphic,compareGraphic,enginesGraphic,handleGraphicEvent} from './graficos.js';
+import {intentGraphic,compareGraphic,handleGraphicEvent} from './graficos.js';
 const escapeHtml = text => String(text ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const numeric = n => typeof n === 'number' && Number.isFinite(n);
 const format = (n, digits=1) => numeric(n) ? n.toLocaleString('es-CL', {maximumFractionDigits:digits}) : 'Sin datos';
@@ -100,10 +100,13 @@ function intentCard(d){
 }
 function aiCard(d) {
   const a=d.ai||{}, engines=a.engines||[];
-  const counts='<div class="md-mini"><div><small>Respuestas examinadas</small><strong>'+format(a.samples)+'</strong></div><div><small>Nombran la marca</small><strong>'+percent(a.mentionRate)+'</strong></div><div><small>Citan el sitio</small><strong>'+percent(a.citationRate)+'</strong></div></div>';
-  const chart=enginesGraphic(engines);
-  const data=engines.length?'<div class="table-wrap"><table><thead><tr><th>Motor</th><th>Muestras</th><th>Menciones</th><th>Citas</th></tr></thead><tbody>'+engines.map(r=>'<tr><th scope="row">'+escapeHtml(r.engine)+'</th><td>'+format(r.samples)+'</td><td>'+format(r.mentions)+'</td><td>'+format(r.citations)+'</td></tr>').join('')+'</tbody></table></div>':empty('No hay respuestas registradas en estas fechas. Una muestra nueva permitirá observar si aparece la marca o si se enlaza su sitio.');
-  return panel('Presencia en respuestas de IA','<p class="md-explain">La mención nombra la marca. La cita incorpora un enlace a su web. Selecciona un motor para consultar cuántas respuestas se evaluaron para cada señal.</p>'+counts+chart+(engines.length?'<details class="md-details"><summary>Ver recuentos por motor</summary>'+data+'</details>':data),'Muestra de IA · '+(d.connections?.ai?.label||'Observaciones manuales'));
+  const visits=a.visits;
+  const counts='<div class="md-mini"><div><small>Respuestas examinadas</small><strong>'+format(a.samples)+'</strong></div><div><small>Motores y tipos de pregunta</small><strong>'+format(engines.length)+'</strong></div><div><small>Visitas desde IA (Analytics)</small><strong>'+(visits?format(visits.sessions):'Sin datos')+'</strong>'+(visits?'<small>Período anterior: '+format(visits.previous)+'</small>':'')+'</div></div>';
+  const rate=(hits,known,range)=>known>0?format(hits)+' de '+format(known)+' · '+format(range.low)+'–'+format(range.high)+' %':'No aplica';
+  const data=engines.length?'<div class="table-wrap"><table><thead><tr><th>Motor y tipo</th><th>Respuestas</th><th>Mención</th><th>Cita</th><th>Recomendación</th></tr></thead><tbody>'+engines.map(r=>'<tr><th scope="row">'+escapeHtml(r.engine)+'</th><td>'+format(r.samples)+(r.refused?' ('+format(r.refused)+' sin respuesta)':'')+'</td><td>'+escapeHtml(rate(r.mentions,r.mentionsKnown,r.mentionRange))+'</td><td>'+escapeHtml(rate(r.citations,r.citationsKnown,r.citationRange))+'</td><td>'+escapeHtml(rate(r.recommendations,r.recommendKnown,r.recommendRange))+'</td></tr>').join('')+'</tbody></table></div>':empty('No hay respuestas registradas en estas fechas. Configura el panel automático o registra una muestra para observar si aparece la marca o si se enlaza su sitio.');
+  const sources=visits?.sources?.length?'<p class="md-explain">Visitas por origen: '+escapeHtml(visits.sources.slice(0,6).map(s=>s.source+' '+format(s.sessions)).join(' · '))+'.</p>':'';
+  const warning=(a.panelError?'<p class="md-partial">'+escapeHtml(a.panelError)+'</p>':'')+(a.estimatedSpend?'<p class="md-explain">Gasto estimado del panel en este período: US$'+format(a.estimatedSpend,2)+'.</p>':'');
+  return panel('Presencia en respuestas de IA','<p class="md-explain">Las respuestas cambian entre repeticiones, así que importa la frecuencia y no una sola prueba. El rango indica entre qué valores puede estar la tasa real. Si dos rangos se cruzan, no hay un cambio demostrable. La app y la API son series distintas: no las sumes ni las compares entre sí.</p>'+warning+counts+sources+data,'Muestra de IA · '+(d.connections?.ai?.label||'Observaciones manuales'));
 }
 function tasksCard(site,d) {
   const ts=site.tasks||[];
@@ -123,7 +126,7 @@ function reportLines(site,d) {
   }else result.push('Búsqueda orgánica. Pendiente de observaciones para el período.');
   if(numeric(s.sessions?.value)||numeric(s.keyEvents?.value))result.push('Analítica del sitio. '+[numeric(s.sessions?.value)?format(s.sessions.value)+' sesiones':null,numeric(s.keyEvents?.value)?format(s.keyEvents.value)+' eventos clave':null].filter(Boolean).join(' y ')+', en todos los canales medidos.');
   else result.push('Analítica del sitio. Sin datos de Analytics 4 para estas fechas.');
-  if(d.ai?.samples) result.push('IA. '+format(d.ai.samples)+' respuestas registradas. Se verificaron '+format(d.ai.mentions)+' menciones en '+format(d.ai.mentionsKnown)+' muestras evaluadas y '+format(d.ai.citations)+' citas en '+format(d.ai.citationsKnown)+' muestras evaluadas.');
+  if(d.ai?.samples) result.push('IA. '+(d.ai.engines||[]).map(r=>r.engine+': '+format(r.mentions)+' menciones en '+format(r.mentionsKnown)+' respuestas y '+format(r.citations)+' citas en '+format(r.citationsKnown)+'.').join(' ')+(d.ai.visits?' Visitas desde IA según Analytics: '+format(d.ai.visits.sessions)+'.':''));
   else result.push('Visibilidad en IA. Sin muestras registradas en el período.');
   const move=d.highlights?.[0]; if(move)result.push('Cambio destacado. '+move.title+'. '+(move.detail||''));
   const intervention=(site.tasks||[]).find(t=>t.appliedAt); 

@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 248" role="img" aria-labelledby="title desc">
   <title id="title">Dónde dar permiso y encontrar la propiedad de Search Console</title>
   <desc id="desc">Ilustración. Selecciona la propiedad del sitio. En Ajustes, Usuarios y permisos, añade el correo de la cuenta de servicio con permiso restringido. En el formulario de SEOBESTIA identifica si es dominio o prefijo.</desc>
-  <rect width="480" height="248" rx="14" fill="#f1edf9"/>
+  <rect width="480" height="248" rx="14" fill="#f3f3f3"/>
   <g font-family="Arial,sans-serif">
-    <rect x="20" y="16" width="440" height="211" rx="10" fill="white" stroke="#c4bfd1"/>
-    <text x="36" y="46" font-size="20" font-weight="bold" fill="#29273e">Search Console</text>
-    <rect x="36" y="59" width="408" height="36" rx="6" fill="#f1edf9" stroke="#7556ab"/>
-    <text x="47" y="82" font-size="15" fill="#443472" font-weight="bold">ejemplo.cl</text>
-    <text x="241" y="82" font-size="14" fill="#443472">Propiedad de dominio ▾</text>
-    <text x="38" y="122" font-size="14" fill="#47445b">Ajustes  ›  Usuarios y permisos</text>
-    <rect x="36" y="135" width="408" height="78" rx="6" fill="#fbfafc" stroke="#d3cedd"/>
-    <text x="48" y="157" font-size="15" font-weight="bold" fill="#29273e">Añadir usuario</text>
-    <text x="48" y="180" font-size="14" fill="#47445b">Correo de la cuenta de servicio</text>
-    <text x="48" y="201" font-size="14" fill="#443472">Permiso  ·  Restringido</text>
+    <rect x="20" y="16" width="440" height="211" rx="10" fill="white" stroke="#c5c5cb"/>
+    <text x="36" y="46" font-size="20" font-weight="bold" fill="#303035">Search Console</text>
+    <rect x="36" y="59" width="408" height="36" rx="6" fill="#f3f3f3" stroke="#7a7a87"/>
+    <text x="47" y="82" font-size="15" fill="#4f4f57" font-weight="bold">ejemplo.cl</text>
+    <text x="241" y="82" font-size="14" fill="#4f4f57">Propiedad de dominio ▾</text>
+    <text x="38" y="122" font-size="14" fill="#4c4c53">Ajustes  ›  Usuarios y permisos</text>
+    <rect x="36" y="135" width="408" height="78" rx="6" fill="#fbfbfb" stroke="#d3d3d8"/>
+    <text x="48" y="157" font-size="15" font-weight="bold" fill="#303035">Añadir usuario</text>
+    <text x="48" y="180" font-size="14" fill="#4c4c53">Correo de la cuenta de servicio</text>
+    <text x="48" y="201" font-size="14" fill="#4f4f57">Permiso  ·  Restringido</text>
   </g>
 </svg>

@@ -8,7 +8,7 @@
 [data-issues-title]{scroll-margin-top:1.4rem}
 .inspect-tabs{margin:1rem 0;padding-bottom:1rem;border-bottom:1px solid var(--line)}
 .inspect-tabs button{transition:none}
-.inspect-tabs .btn.secondary[aria-pressed=true],.inspect-tabs .btn.secondary[aria-pressed=true]:hover:not(:disabled){background:var(--accent);color:white;border-color:var(--accent)}
+.inspect-tabs .btn.secondary[aria-pressed=true],.inspect-tabs .btn.secondary[aria-pressed=true]:hover:not(:disabled){background:var(--peach);color:white;border-color:var(--peach)}
 .inspect-filter,.editor-controls{align-items:end;margin:.75rem 0 1rem}
 .inspect-filter label:first-child{flex:1 1 12rem}
 .inspect-filter label,.inspect-severity,.editor-controls label{min-width:0}
