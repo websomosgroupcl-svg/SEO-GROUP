@@ -10,7 +10,8 @@
   "scripts": {
     "start": "node --env-file-if-exists=.env server.mjs",
     "test": "node --test tests/*.test.mjs",
-    "backup": "node --env-file-if-exists=.env scripts/backup.mjs"
+    "backup": "node --env-file-if-exists=.env scripts/backup.mjs",
+    "importar-geo": "node --env-file-if-exists=.env scripts/importar-geo.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1161.0",

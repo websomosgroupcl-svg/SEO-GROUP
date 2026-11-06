@@ -73,6 +73,46 @@ test('la ficha del inspector y la auditoría de sitios anteriores muestran los m
  site.audit=current;
  assert.equal(auditForSite(site),current);
 });
+const healthy='<html lang="es"><head><meta name="viewport" content="width=device-width"><title>Catálogo</title><meta name="description" content="Resumen"></head><body><main><h1>Catálogo</h1><p>'+'palabra '.repeat(120)+'</p></main></body></html>';
+const crawlWith=(url,get,opts={})=>crawlSite({url,authorized:true},{request:async u=>get(u),wait:async()=>{},cursor:{queue:[url],visited:[]},...opts});
+test('sigue la variante www y HTTPS del mismo dominio y rechaza otro dominio',async()=>{
+ const seen=[],served=u=>{
+  seen.push(u);
+  const parsed=new URL(u);
+  if(parsed.protocol==='http:')return reply(301,'',{location:u.replace('http:','https:')});
+  if(parsed.hostname==='sitio.example')return reply(301,'',{location:u.replace('//sitio','//www.sitio')});
+  return parsed.pathname==='/robots.txt'?reply(404):reply(200,healthy);
+ };
+ const moved=await crawlWith('http://sitio.example/',served);
+ assert.equal(moved.home,'https://www.sitio.example/');assert.equal(moved.pages[0].url,moved.home);assert.equal(moved.errors.length,0);
+ assert.equal(seen.filter(u=>u==='https://www.sitio.example/').length,1);
+ // Robots at the old origin answer 200, so only the first page reveals the move.
+ const lateMove=await crawlWith('https://sitio.example/',u=>u==='https://sitio.example/robots.txt'?reply(200,'User-agent: *\nAllow: /'):served(u));
+ assert.equal(lateMove.home,'https://www.sitio.example/');assert.equal(lateMove.pages.length,1);
+ const foreign=await crawlWith('https://sitio.example/',()=>reply(301,'',{location:'https://otra.example/'}));
+ assert.equal(foreign.pages.length,0);assert.match(foreign.errors[0].message,/redirige a https:\/\/otra\.example/);
+ const downgrade=await crawlWith('https://sitio.example/',()=>reply(301,'',{location:'http://sitio.example/'}));
+ assert.equal(downgrade.pages.length,0);assert.equal(downgrade.home,undefined);
+ const local=await crawlWith('https://sitio.example/',()=>reply(301,'',{location:'https://www.sitio.local/'}));
+ assert.equal(local.pages.length,0);
+});
+test('robots.txt con 403 no cancela el rastreo y lo avisa; 429 y 5xx lo detienen',async()=>{
+ const withRobots=status=>crawlWith(root,u=>u.endsWith('robots.txt')?reply(status):reply(200,healthy));
+ const blocked=await withRobots(403);
+ assert.equal(blocked.pages.length,1);assert.equal(blocked.complete,true);assert.match(blocked.notes[0],/HTTP 403/);
+ assert.deepEqual((await withRobots(404)).notes,[]);
+ for(const status of [429,503]){const stopped=await withRobots(status);assert.equal(stopped.pages.length,0);assert.equal(stopped.complete,false);}
+});
+test('la nota baja con una SPA vacía, títulos largos, varios H1 y sin viewport',()=>{
+ const rate=html=>{const page=extractPage(html,root);return auditSite({pages:[page],complete:true});};
+ const rules=a=>a.issues.map(i=>i.rule);
+ assert.equal(rate(healthy).score,100);
+ const spa=rate('<html lang="es"><head><title>App</title><meta name="description" content="d"></head><body><div id="root"></div></body></html>');
+ assert.ok(spa.score<60,'SPA '+spa.score);assert(rules(spa).includes('empty'));assert(!rules(spa).includes('thin'));
+ const messy=rate(healthy.replace('Catálogo</title>','x'.repeat(71)+'</title>').replace('<main>','<main><h1>Otro</h1>').replace(/<meta name="viewport"[^>]+>/,''));
+ for(const rule of ['title-long','multiple-h1','viewport'])assert(rules(messy).includes(rule),rule);
+ assert.deepEqual(rules(rate(healthy.replace('palabra '.repeat(120),'palabra '.repeat(50)))),['thin']);
+});
 test('la nota distingue dos fallos entre muchas comprobaciones de un resultado perfecto',()=>{
  const pages=Array.from({length:100},(_,i)=>({url:root+i,status:200,html:true,h1:'Título '+i,title:'Ficha '+i,description:'Resumen '+i,lang:'es',links:[]}));
  const before=auditSite({pages,complete:true});
