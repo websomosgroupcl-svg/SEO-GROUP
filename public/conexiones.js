@@ -20,7 +20,7 @@ const picture=(name,alt)=>`<figure class="cx-figure"><img src="/${name}" width="
 const button=(name,action,extra='')=>`<button type="button" class="btn secondary compact" data-cx="${action}" ${extra}>${esc(name)}</button>`;
 const stepTitles=['Preparar la cuenta','Dar permiso','Vincular el sitio'];
 export function mountConnections(container,{site,user,api,onConnected,initialSource=gsc}){
-  let source=initialSource===ga4?ga4:gsc,step=0,prep=null,loading=false,prepError='',busy=false,disposed=false;
+  let source=initialSource===ga4?ga4:gsc,step=0,prep=null,loading=false,prepError='',busy=false,disposed=false,found=null;
   const admin=user?.role==='admin'&&!site.demo;
   const canLink=admin||Boolean(!site.demo&&!user?.pendingApproval&&user?.id&&site.memberIds?.includes(user.id));
   let liveReview=Boolean(site.ga4LiveReviewRequired);
@@ -52,6 +52,26 @@ export function mountConnections(container,{site,user,api,onConnected,initialSou
     const email=selected().email;
     return email?`<div class="cx-account"><span>Correo que debes invitar</span><code>${esc(email)}</code>${button('Copiar correo','copy')}</div>`:'';
   }
+  function foundReport(){
+    if(!found)return '';
+    const cell=(value,alternatives=[])=>value?esc(value):alternatives.length?'Varias: '+esc(alternatives.join(', ')):'Sin acceso';
+    const rows=found.sites.map(x=>`<tr><th scope="row">${esc(x.name)}</th><td>${cell(x.gsc)}</td><td>${cell(x.ga4,x.ambiguous)}</td></tr>`).join('');
+    const names=list=>esc(list.join(', '));
+    const unused=[...found.unused.gsc,...found.unused.ga4.map(p=>p.name+' ('+p.id+')')];
+    return `<div class="cx-found"><p><strong>${found.linkedNow?found.linkedNow+(found.linkedNow===1?' vínculo nuevo.':' vínculos nuevos.'):'No hay vínculos nuevos.'}</strong> Lo que ya estaba vinculado no cambia.</p>
+      ${rows?`<div class="cx-found-table"><table><thead><tr><th scope="col">Web</th><th scope="col">Search Console</th><th scope="col">GA4</th></tr></thead><tbody>${rows}</tbody></table></div>`:'<p>Todavía no hay webs registradas.</p>'}
+      ${found.sites.some(x=>x.ambiguous.length)?'<p>Si aparecen varias propiedades, elige la correcta en el paso 3.</p>':''}
+      ${unused.length?`<p><strong>Disponibles sin ficha:</strong> ${names(unused)}. Agrega la web para vincularlas.</p>`:''}
+      ${found.gtm.length?`<p><strong>Tag Manager:</strong> ${names(found.gtm.map(c=>c.id))}. Cada revisión lee el contenedor que encuentra en el HTML de la web.</p>`:''}
+      ${found.errors.map(x=>`<p role="alert">${esc(x)}</p>`).join('')}</div>`;
+  }
+  async function discover(){
+    feedback('Revisando a qué propiedades tiene acceso la cuenta…');
+    found=await api('conexiones/descubrir','POST',{});
+    if(disposed)return;
+    const mine=found.sites.find(x=>x.id===site.id);
+    for(const key of [gsc,ga4])if(mine?.[key]&&mine[key]!==connected[key]){connected[key]=drafts[key]=mine[key];onConnected?.(key,mine[key]);}
+  }
   function prepBody(){
     const entry=selected();
     let controls='';
@@ -59,12 +79,12 @@ export function mountConnections(container,{site,user,api,onConnected,initialSou
     else if(loading&&!prep)controls='<p role="status">Consultando la preparación del servidor…</p>';
     else if(prepError)controls=`<p class="cx-hint">${esc(prepError)}</p>${button('Volver a comprobar','refresh')}`;
     else if(prep){
-      const explanation=entry.invalid?'El servidor encontró una credencial que no puede leer. Revisa la cuenta y su formato con quien gestiona esta instalación.':entry.configured?'El permiso sobre la propiedad se comprueba al finalizar el paso 3.':'Configúrala una vez para esta instalación. Luego concede permiso en cada propiedad.';
-      controls=`<p class="cx-hint"><strong>${entry.configured?'Cuenta preparada.':entry.invalid?'Revisar la credencial.':'Falta preparar la cuenta.'}</strong> ${explanation}</p>${identity()}`;
+      const explanation=entry.invalid?'El servidor encontró una credencial que no puede leer. Revisa la cuenta y su formato con quien gestiona esta instalación.':entry.configured?(admin?'Si le das acceso a una propiedad nueva o agregas una web, vuelve a revisar sus accesos.':'El permiso sobre la propiedad se comprueba al finalizar el paso 3.'):'Sube el archivo una vez: SEOBESTIA revisa sus accesos y vincula cada web por su dominio.';
+      controls=`<p class="cx-hint"><strong>${entry.configured?'Cuenta preparada.':entry.invalid?'Revisar la credencial.':'Falta preparar la cuenta.'}</strong> ${explanation}</p>${identity()}${admin&&entry.configured?button('Revisar accesos de la cuenta','discover'):''}${foundReport()}`;
       const hosted=prep.storage==='hosted';
       if(!admin)controls+=`<p>${entry.configured?'Pide al responsable de la propiedad en Google que dé acceso de lectura al correo de arriba. Después podrás comprobar el identificador de este sitio en el paso 3.':'Pide al administrador de SEOBESTIA que prepare la cuenta del equipo.'}</p>${button('Actualizar estado','refresh')}`;
       else if(prep.canUpload&&entry.canUpload!==false)controls+=`<details class="cx-help" ${entry.configured?'':'open'}><summary>${entry.configured?'Cambiar la cuenta para esta fuente':hosted?'Guardar el archivo de Google en SEOBESTIA':'Guardar el archivo de Google en este equipo'}</summary>
-        <p>${entry.configured?'Cambiar la cuenta afecta a los sitios que usan esta fuente. Revisa sus permisos antes de hacer el cambio. ':''}Elige el JSON descargado de Google Cloud. ${hosted?'El servidor cifra la credencial antes de guardarla para las revisiones del equipo.':'Windows protege la credencial para el usuario que ejecuta el servidor.'}${source===gsc?' Analytics también podrá usarla si no tiene una cuenta propia.':''}</p>
+        <p>${entry.configured?'Cambiar la cuenta afecta a los sitios que usan esta fuente. Revisa sus permisos antes de hacer el cambio. ':''}Elige el JSON descargado de Google Cloud. Al guardarlo se revisan sus accesos. ${hosted?'El servidor cifra la credencial antes de guardarla para las revisiones del equipo.':'Windows protege la credencial para el usuario que ejecuta el servidor.'}${source===gsc?' Analytics también podrá usarla si no tiene una cuenta propia.':''}</p>
         <form data-cx-form="credential"><label>Archivo JSON de la cuenta de servicio<input required type="file" name="credential" accept=".json,application/json"></label><button class="btn secondary compact" type="submit">${hosted?'Guardar cuenta para el equipo':'Guardar cuenta en este equipo'}</button></form></details>`;
       else controls+=`<details class="cx-help" ${entry.configured?'':'open'}><summary>Configurar la credencial del servidor</summary>
         ${hosted&&!prep.canUpload?'<p>Para permitir que el administrador suba el archivo aquí, quien gestiona el alojamiento puede configurar una clave de cifrado privada y exclusiva del proyecto en <code>SEO_GOOGLE_VAULT_KEY</code>. Debe contener 32 bytes aleatorios codificados en base64 o hexadecimal y estar disponible para las funciones del servidor.</p>':''}
@@ -136,6 +156,11 @@ export function mountConnections(container,{site,user,api,onConnected,initialSou
       case 'prev':move(step-1);break;
       case 'next':move(step+1);break;
       case 'refresh':await loadPreparation();break;
+      case 'discover':
+        busy=true;render();
+        try{await discover();busy=false;if(!disposed){render();feedback('Accesos revisados.');}}
+        catch(err){busy=false;if(!disposed){render();feedback(err.message||'No se pudieron revisar los accesos.',true);}}
+        break;
       case 'copy':
         try{await navigator.clipboard.writeText(selected().email);feedback('Correo copiado.');}
         catch{feedback('Selecciona el correo de arriba y cópialo.',true);}break;
@@ -161,7 +186,9 @@ export function mountConnections(container,{site,user,api,onConnected,initialSou
         if(disposed)return;
         if(status?.[source]?.configured){prep=status;prepError='';}
         else await loadPreparation();
-        result='Cuenta guardada. Comprueba los permisos de la propiedad en el paso 2.';
+        await discover();
+        if(disposed)return;
+        result='Cuenta guardada y accesos revisados.';
       }else{
         completed[source]=false;
         const prop=String(form.elements.property.value).trim();

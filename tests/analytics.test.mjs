@@ -45,10 +45,15 @@ test('histórico distingue sesiones, personas activas diarias y eventos por dest
  const response=(dims,vs)=>({dimensionValues:[{value:dims}],metricValues:vs.map(value=>({value:String(value)}))});
  const data=await historicalAnalytics(site,{token,now:new Date('2026-11-04T14:00:00Z'),request:async(url,init)=>{
    const q=JSON.parse(init.body);
-   assert.deepEqual(q.dimensionFilter.andGroup.expressions.map(e=>[e.filter.fieldName,e.filter.stringFilter.matchType,e.filter.stringFilter.value]),[['streamId','EXACT','6789'],['hostName','EXACT','tienda.example']]);
+   assert.deepEqual(q.dimensionFilter.andGroup.expressions.slice(0,2).map(e=>[e.filter.fieldName,e.filter.stringFilter.matchType,e.filter.stringFilter.value]),[['streamId','EXACT','6789'],['hostName','EXACT','tienda.example']]);
+   if(q.dimensions[1]?.name==='sessionSource'){
+     assert.match('chatgpt.com',new RegExp(q.dimensionFilter.andGroup.expressions[2].filter.stringFilter.value));
+     return json({rows:[{dimensionValues:[{value:'20261102'},{value:'chatgpt.com'}],metricValues:[{value:'7'}]}]});
+   }
    return json({rows:q.dimensions[0].name==='date'?[response('20261102',[24,18,3])]:[response('/muebles',[140,12])],metadata:{timeZone:'America/Santiago'}});
  }});
  assert.deepEqual(data.analyticsDays,[{date:'2026-11-02',sessions:24,activeUsers:18,keyEvents:3}]);
+ assert.deepEqual(data.ga4AiDays,[{date:'2026-11-02',source:'chatgpt.com',sessions:7}]);
  assert.equal(data.ga4Landing[0].endDate,'2026-11-03');assert.equal(data.ga4Landing[0].keyEvents,12);
 });
 test('sugerencia comercial cita búsqueda semilla y distingue hipótesis de medición',()=>{

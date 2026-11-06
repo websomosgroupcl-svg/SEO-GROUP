@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {intentGraphic,compareGraphic,enginesGraphic,healthGraphic} from '../public/graficos.js';
+import {intentGraphic,compareGraphic,healthGraphic} from '../public/graficos.js';
 
 test('el anillo utiliza como denominador las impresiones de consultas observadas',()=>{
   const html=intentGraphic([{label:'informacional',impressions:2},{label:'comercial',impressions:6},{label:'sin datos',impressions:null}]);
@@ -17,10 +17,6 @@ test('una medición desconocida no recibe una barra de cero',()=>{
   assert.match(comparison,/2\/7 días/);
   assert.match(comparison,/width:0%/);
   assert.match(comparison,/gfx-track is-unknown/);
-  const ai=enginesGraphic([{engine:'Motor A',samples:3,citations:0,citationsKnown:0,citationRate:null,mentions:0,mentionsKnown:3,mentionRate:0}]);
-  assert.match(ai,/Menciones en 0 de 3 respuestas evaluadas/);
-  assert.match(ai,/Faltan respuestas evaluadas para citas/);
-  assert.match(ai,/Sin evaluar/);
 });
 
 test('el gráfico técnico muestra reglas y limita su consejo a fallos confirmados',()=>{

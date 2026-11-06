@@ -23,17 +23,33 @@ test('convierte la pregunta con citas faltantes en propuesta de IA con muestra y
   assert(siteOpportunities(makeDemo(user)).some(o=>o.target==='ia'&&o.source.includes('ejemplo')));
   s.aiObservations=s.aiObservations.filter(r=>r.cited);assert(!siteOpportunities(s).some(o=>o.aiEvidence));
 });
-test('evalúa citas de una URL para la misma pregunta y motor en dos ventanas equivalentes',()=>{
-  const s=fixture(),t={keyword:prompt,target:'ia',page,appliedAt:date};measure(s,t,now);
-  assert.equal(t.result.state,'medido');assert(!('google' in t.result.channels));
-  const g=t.result.engines.find(e=>e.engine==='Gemini');assert.equal(g.before.n,3);assert.equal(g.after.n,3);assert.equal(g.after.hits,2);
+// A daily panel: one answer per day, cited or not, in the windows around the change.
+function daily(s,engine,hitsBefore,hitsAfter,{other=prompt,promptType}={}){
+  for(let d=1;d<=24;d++){
+    s.aiObservations.push({date:shiftDay(date,-d),engine,prompt:other,promptType,cited:d<=hitsBefore,citedUrl:d<=hitsBefore?page:''});
+    s.aiObservations.push({date:shiftDay(date,d),engine,prompt:other,promptType,cited:d<=hitsAfter,citedUrl:d<=hitsAfter?page:''});
+  }
+}
+test('un cambio solo se declara cuando los rangos de las dos ventanas no se cruzan',()=>{
+  const reading=(before,after,engine='Gemini')=>{const s=fixture();s.aiObservations=[];daily(s,engine,before,after);const t={keyword:prompt,target:'ia',page,appliedAt:date};measure(s,t,now);return t.result;};
+  assert.equal(reading(0,12).recommendation,'Mejora demostrada');
+  assert.equal(reading(12,0).recommendation,'Caída demostrada');
+  const noise=reading(1,3);assert.equal(noise.state,'medido');assert.equal(noise.recommendation,'Sin cambio demostrable');assert.match(noise.message,/se cruzan/);
+  const drift=fixture();drift.aiObservations=[];daily(drift,'Gemini',0,12);daily(drift,'Gemini',0,12,{other:'Pregunta de control',promptType:'control'});
+  const t={keyword:prompt,target:'ia',page,appliedAt:date};measure(drift,t,now);
+  assert.equal(t.result.recommendation,'Revisar la muestra');assert.match(t.result.message,/control/);
+});
+test('tres respuestas ya no bastan para medir una cita',()=>{
+ const s=fixture(),t={keyword:prompt,target:'ia',page,appliedAt:date};measure(s,t,now);
+  assert.equal(t.result.state,'insuficiente');assert(!('google' in t.result.channels));assert.match(t.result.message,/al menos 20 respuestas/);
+  const g=t.result.engines.find(e=>e.engine==='Gemini');assert.equal(g.before.n,3);assert.equal(g.after.n,3);assert.equal(g.after.hits,2);assert.equal(g.comparable,false);
   assert.equal(t.result.engines.find(e=>e.engine==='Copilot').comparable,false);assert.doesNotMatch(t.result.message,/clics/i);
-  s.aiObservations=s.aiObservations.filter(r=>r.date>date);measure(s,t,now);assert.equal(t.result.state,'insuficiente');
 });
 test('la recomendación de ambos conserva resultados independientes y distingue muestras insuficientes',()=>{
   const s=fixture(),t={target:'ambos',keyword:prompt,page,appliedAt:date};
   s.rows=Array.from({length:57},(_,i)=>({query:prompt,page,country:'Chile',device:'',source:'CSV',date:shiftDay(date,i-28),clicks:i<=28?5:1,impressions:20}));
-  measure(s,t,now);assert.equal(t.result.state,'medido');assert.equal(t.result.channels.google.recommendation,'Mejorar');assert.equal(t.result.channels.ia.recommendation,'Revisar la muestra');
+  s.aiObservations=[];daily(s,'Gemini',1,3);
+  measure(s,t,now);assert.equal(t.result.state,'medido');assert.equal(t.result.channels.google.recommendation,'Mejorar');assert.equal(t.result.channels.ia.recommendation,'Sin cambio demostrable');
   s.aiObservations=[];measure(s,t,now);assert.equal(t.result.state,'parcial');assert.match(t.result.message,/Muestra de IA insuficiente/);
   t.target='ia';measure(s,t,now);assert.equal(t.result.state,'insuficiente');assert.doesNotMatch(t.result.message,/clics/i);
 });

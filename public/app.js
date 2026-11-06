@@ -1,6 +1,7 @@
 import {mountInspector} from './inspector.js';
 import {mountAnalysis,mountEditorial,analysisShell,editorialShell} from './redaccion.js';
 import {companion} from './companions.js';
+import {sprite} from './sprite.js';
 import {syncMascota,openMascota,creditMascota} from './mascota.js';
 import {configurePersonalAI} from './mi-ia.js';
 import {mountDiagnostico} from './diagnostico.js';
@@ -21,7 +22,7 @@ import {mountTeam} from './equipo.js';
   const e = x => String(x ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const number = n => n !== null && n !== undefined && n !== '' && Number.isFinite(Number(n)) ? Number(n).toLocaleString('es-CL',{maximumFractionDigits:1}):'—';
   const date = (v,time=false) => {if(!v) return 'Pendiente'; const d = new Date(v.length===10 ? v+'T12:00:00':v);return Number.isNaN(+d)?'Sin fecha':d.toLocaleDateString('es-CL',{day:'numeric',month:'short',year:'numeric',...(time?{hour:'2-digit',minute:'2-digit'}:{})});};
-  const paths = {globe:'<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',arrow:'<path d="M4 12h15m-6-6 6 6-6 6"/>',plus:'<path d="M12 4v16M4 12h16"/>',today:'<path d="M4 6h16v14H4zM4 10h16M8 3v5m8-5v5"/>',audit:'<path d="M4 5h16v14H4zM6 13h3l2-4 2 7 2-4h3"/>',keywords:'<circle cx="9" cy="10" r="6"/><path d="m14 15 5 6"/>',tasks:'<path d="M7 5h13M7 12h13M7 19h13M3 5h.1M3 12h.1M3 19h.1"/>',review:'<path d="M4 9a8 8 0 1 1 0 6m0-11v6h6"/>',settings:'<path d="M3 6h18M3 17h18"/><circle cx="8" cy="6" r="3" fill="currentColor"/><circle cx="15" cy="17" r="3" fill="currentColor"/>',out:'<path d="M10 4H4v16h6m3-13 5 5-5 5m-5-5h10"/>',users:'<circle cx="9" cy="8" r="4"/><path d="M2 20c0-8 14-8 14 0m1-16c4 0 5 7 1 8m0 2c3 0 4 3 4 6"/>',close:'<path d="m6 6 12 12M6 18 18 6"/>',file:'<path d="M6 3h8l4 4v14H6zM14 3v5h4M8 13h7m-7 4h7"/>',bell:'<path d="M5 17h14l-2-3V9a5 5 0 0 0-10 0v5zm5 3h4"/>',home:'<path d="m3 11 9-8 9 8m-16 0v10h14V11"/>'};
+  const paths = {sites:'<path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"/>',chart:'<path d="M4 20V4m0 16h16M9 16v-5m5 5V8m5 8v-3"/>',menu:'<path d="M4 7h16M4 12h16M4 17h16"/>',pulse:'<path d="M3 12h4l2-6 4 12 2-6h6"/>',spark:'<path d="m12 3 2 7 7 2-7 2-2 7-2-7-7-2 7-2z"/>',globe:'<circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/>',arrow:'<path d="M4 12h15m-6-6 6 6-6 6"/>',plus:'<path d="M12 4v16M4 12h16"/>',today:'<path d="M4 6h16v14H4zM4 10h16M8 3v5m8-5v5"/>',audit:'<path d="M4 5h16v14H4zM6 13h3l2-4 2 7 2-4h3"/>',keywords:'<circle cx="9" cy="10" r="6"/><path d="m14 15 5 6"/>',tasks:'<path d="M7 5h13M7 12h13M7 19h13M3 5h.1M3 12h.1M3 19h.1"/>',review:'<path d="M4 9a8 8 0 1 1 0 6m0-11v6h6"/>',settings:'<path d="M3 6h18M3 17h18"/><circle cx="8" cy="6" r="3" fill="currentColor"/><circle cx="15" cy="17" r="3" fill="currentColor"/>',out:'<path d="M10 4H4v16h6m3-13 5 5-5 5m-5-5h10"/>',users:'<circle cx="9" cy="8" r="4"/><path d="M2 20c0-8 14-8 14 0m1-16c4 0 5 7 1 8m0 2c3 0 4 3 4 6"/>',close:'<path d="m6 6 12 12M6 18 18 6"/>',file:'<path d="M6 3h8l4 4v14H6zM14 3v5h4M8 13h7m-7 4h7"/>',bell:'<path d="M5 17h14l-2-3V9a5 5 0 0 0-10 0v5zm5 3h4"/>',home:'<path d="m3 11 9-8 9 8m-16 0v10h14V11"/>'};
   const icon=k=>`<svg class="icon-svg" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">${paths[k]||paths.file}</svg>`;
   const brand='<span class="brand"><img src="/isotipo.svg" alt="">SEOBESTIA</span>';
   const btn=(text,act,id='',css='secondary',ic='')=>`<button type="button" class="btn ${css}" data-action="${e(act)}" data-id="${e(id)}">${ic?icon(ic):''}${e(text)}</button>`;
@@ -34,21 +35,15 @@ import {mountTeam} from './equipo.js';
     {key:'auditoria',label:'Auditar',hint:'Revisar la salud del sitio',icon:'audit'},
     {key:'keywords',label:'Keywords',hint:'Elegir búsquedas útiles',icon:'keywords'},
     {key:'tareas',label:'Mejoras',hint:'Trabajar en una página',icon:'tasks'},
-    {key:'revisiones',label:'Medir',hint:'Seguir los resultados',icon:'review'}
+    {key:'revisiones',label:'Medir',hint:'Seguir los resultados',icon:'chart'}
   ];
   const sections=[['hoy','Plan del sitio'],...stages.map(s=>[s.key,s.label]),['conexiones','Conexiones'],['ajustes','Configuración']];
   let globalPage='sitios',createAfterLogin=false,connectionSource='gsc';
   const isDemoAccount=()=>Boolean(state.user?.email.endsWith('@local.example'));
-  function workspaceNav(){
-    const links=[['sitios','Mis sitios'],['diagnostico','Diagnóstico sin agregar']];
-    if(state.user?.role==='admin'||isDemoAccount())links.push(['usuarios','Usuarios']);
-    return '<nav class="global-nav" aria-label="Espacio del equipo">'+links.map(([page,label])=>'<a href="#/'+page+'" '+(!state.site&&page===globalPage?'aria-current="page"':'')+'>'+label+'</a>').join('')+'</nav>';
-  }
-  const stageNumber=key=>String(stages.findIndex(s=>s.key===key)+1).padStart(2,'0');
   const applied=t=>Boolean(t.appliedAt&&t.page&&['aplicada','en_seguimiento','cerrada'].includes(t.status));
   const drafting=t=>['pendiente','en_curso'].includes(t.status);
   const reviewing=s=>(s.jobs||[]).some(j=>['pending','running'].includes(j.status));
-  function stageIntro(key,title,copy){return '<header class="step-intro"><p class="eyebrow">'+e(stages.some(s=>s.key===key)?'Paso '+stageNumber(key)+' de 04':key)+'</p><h1>'+e(title)+'</h1><p>'+e(copy)+'</p></header>';}
+  function stageIntro(key,title,copy){return '<header class="step-intro"><h1>'+e(title)+'</h1><p>'+e(copy)+'</p></header>';}
   function nextCard(k,title,copy,action){return '<section class="next-card"><div class="guide-copy"><p class="eyebrow">'+e(k)+'</p><h2>'+e(title)+'</h2><p>'+e(copy)+'</p>'+action+'</div></section>';}
   const advance=(to,label)=>btn(label,'tab',to,'primary','arrow');
   const ruleNames={description:'Añade una descripción a esta página',title:'Dale un título claro a esta página',h1:'Añade un encabezado que explique la página',http:'Comprueba por qué falla esta dirección',broken:'Corrige los enlaces que llevan a un error',noindex:'Comprueba si esta página debe aparecer en Google',canonical:'Revisa la página que indicas como principal',alt:'Describe las imágenes que necesitan texto alternativo','duplicate-title':'Distingue estas páginas con títulos propios','duplicate-description':'Escribe una descripción propia para esta página','duplicate-content':'Comprueba por qué dos páginas tienen el mismo texto',lang:'Indica el idioma del contenido',chain:'Enlaza directamente al destino final'};
@@ -88,7 +83,7 @@ import {mountTeam} from './equipo.js';
   function login({email='',message=''}={}){
     stopMetrics();
     syncMascota({user:null,site:null,tab:null});
-    const intro='<section class="login-art">'+brand+'<div><p class="eyebrow">El taller de tu web</p><h1>¿Qué página mejoramos hoy?</h1><p>Encuentra una búsqueda que le importe a tu público y convierte esa idea en una mejora concreta.</p><ol class="login-route">'+stages.map((s,i)=>'<li><span>0'+(i+1)+'</span> '+e(s.label)+'</li>').join('')+'</ol></div><footer>Una web, paso a paso.</footer></section>';
+    const intro='<section class="login-art">'+brand+'<div><h1>¿Qué página mejoramos hoy?</h1><p>Encuentra una búsqueda que le importe a tu público y convierte esa idea en una mejora concreta.</p><ol class="login-route">'+stages.map((s,i)=>'<li>'+e(s.label)+'</li>').join('')+'</ol></div><div class="login-cats">'+sprite('hoy','idle')+sprite('auditoria','licking-1')+sprite('revisiones','sitting')+sprite('ajustes','idle')+'</div></section>';
     const demo=state.demoAvailable?'<div class="login-demo"><p class="eyebrow">¿Primera visita?</p><h3>Prueba con Madera Sur</h3><p class="meta">Explora el recorrido con una tienda de ejemplo y datos ficticios.</p>'+btn('Explorar demostración','demo','','secondary','arrow')+'</div>':'';
     const setup=state.setupAvailable?'<div class="inline-note"><p class="meta">Para empezar con tus propias webs, crea la primera cuenta de este equipo.</p>'+btn('Crear administrador local','setup','','secondary compact')+'</div>':'';
     const signup=state.signupAvailable?'<div class="login-signup"><span>¿Necesitas acceso para trabajar?</span>'+btn('Crear mi cuenta','signup','','secondary compact')+'</div>':'';
@@ -145,7 +140,17 @@ import {mountTeam} from './equipo.js';
     if(state.user.pendingApproval){$('[data-approval-status]').textContent='Tu solicitud sigue pendiente de aprobación.';return;}
     route();toast('Tu cuenta ya tiene acceso al equipo.');
   }
-  function top(){const u=state.user;return '<header class="top"><div class="bar"><div class="left">'+brand+'<span class="stamp">Taller de posicionamiento</span></div>'+workspaceNav()+'<div class="right"><button data-action="my-ai" class="personal-nav">Mi IA</button><button data-action="pet-open" class="personal-nav" aria-label="Abrir mi mascota" title="Mi mascota"><img src="/isotipo.svg" alt="" width="22" height="22"></button><span class="identity"><span class="avatar">'+e((u.name||u.email||'U')[0].toUpperCase())+'</span><span class="username">'+e(u.name||u.email)+'</span></span><button data-action="logout" aria-label="Cerrar sesión" title="Cerrar sesión">'+icon('out')+'</button></div></div></header>';}
+  function setNav(open){
+    const frame=$('.shell');if(!frame)return;
+    frame.toggleAttribute('data-nav-open',open);
+    $('.mobile-bar [data-nav]')?.setAttribute('aria-expanded',String(open));
+    (open?$('.sidebar select'):$('.mobile-bar [data-nav]'))?.focus({preventScroll:true});
+  }
+  function shell(main){
+    const scroll=$('.sidebar')?.scrollTop||0;
+    app.innerHTML='<div class="shell"><div class="mobile-bar">'+brand+'<button type="button" class="icon-btn" data-nav="open" aria-expanded="false" aria-controls="sidebar" aria-label="Abrir menú">'+icon('menu')+'</button></div><button type="button" class="side-scrim" data-nav="close" aria-label="Cerrar menú" tabindex="-1"></button>'+sidebar()+main+'</div>';
+    $('.sidebar').scrollTop=scroll;
+  }
   function route(id='',tab='hoy'){const target=id?'#/sitio/'+encodeURIComponent(id)+'/'+tab:'#/sitios';if(location.hash===target)loadRoute();else location.hash=target;}
   function destination(page){const hash='#/'+page;if(location.hash===hash)loadRoute();else location.hash=hash;}
   function teamAccess(page,newSiteAfter=false){
@@ -177,20 +182,29 @@ import {mountTeam} from './equipo.js';
       if(seq!==requestToken||!state.user)return;
       const demoLink=isDemoAccount()&&id&&!state.sites.some(s=>s.id===id);
       const open=demoLink?btn('Entrar al espacio del equipo','site-access',id,'primary'):'';
-      app.innerHTML=top()+`<main class="frame" id="main" tabindex="-1"><div class="overview"><h1>${demoLink?'Abre el sitio con tu cuenta del equipo':'No se pudo abrir la vista'}</h1><p role="alert">${demoLink?'Estás en una sesión de demostración. Para abrir este enlace, inicia sesión con una cuenta que tenga acceso al sitio.':e(err.message)}</p></div><div class="actions">${open}${btn('Volver a intentar','retry')}${btn('Mis sitios','sites')}</div></main>`;
+      shell(`<main class="workspace-main" id="main" tabindex="-1"><div class="overview"><h1>${demoLink?'Abre el sitio con tu cuenta del equipo':'No se pudo abrir la vista'}</h1><p role="alert">${demoLink?'Estás en una sesión de demostración. Para abrir este enlace, inicia sesión con una cuenta que tenga acceso al sitio.':e(err.message)}</p></div><div class="actions">${open}${btn('Volver a intentar','retry')}${btn('Mis sitios','sites')}</div></main>`);
     }finally{clearTimeout(busy);}
   }
   function head(k,title,actions=''){return `<div class="section-head"><div><p class="eyebrow">${e(k)}</p><h2>${e(title)}</h2></div><div class="actions">${actions}</div></div>`;}
-  function sidebar(s){
-    const siteSelect=state.sites.length>1?'<label class="site-switch">Cambiar de sitio<select aria-label="Cambiar sitio" id="site-select">'+state.sites.map(x=>'<option value="'+e(x.id)+'" '+(x.id===s.id?'selected':'')+'>'+e(x.name)+'</option>').join('')+'</select></label>':'';
-    const current=key=>state.tab===key?'aria-current="page"':'';
-    const steps=stages.map((st,i)=>'<button class="step-link" data-action="tab" data-id="'+st.key+'" '+(state.tab===st.key?'aria-current="step"':'')+'><span class="step-index">0'+(i+1)+'</span><span class="step-copy"><strong>'+e(st.label)+'</strong><small>'+e(st.hint)+'</small></span></button>').join('');
-    return '<aside class="sidebar"><div class="site-mast"><p class="eyebrow">Tu sitio</p><h2>'+e(s.name)+'</h2><p class="meta break">'+e(urlLabel(s.url))+' · '+e(s.country)+'</p>'+siteSelect+'</div><button class="side-home" data-action="tab" data-id="hoy" '+current('hoy')+'>'+icon('home')+' Plan del sitio</button><nav class="step-nav" aria-label="Pasos del recorrido"><p class="eyebrow">Tu recorrido</p>'+steps+'</nav><div class="site-tools"><button data-action="sites">'+icon('globe')+' Mis sitios</button><button data-action="new-site">'+icon('plus')+' Agregar sitio</button><button data-action="tab" data-id="conexiones" '+current('conexiones')+'>'+icon('globe')+' Conexiones de Google</button><button data-action="tab" data-id="ajustes" '+current('ajustes')+'>'+icon('settings')+' Configuración</button></div></aside>';
+  function sidebar(){
+    const s=state.site,u=state.user;
+    const link=(href,label,ic,active)=>'<a class="side-link" href="'+e(href)+'" '+(active?'aria-current="page"':'')+'>'+icon(ic)+'<span>'+e(label)+'</span></a>';
+    const tab=(key,label,ic)=>link('#/sitio/'+encodeURIComponent(s.id)+'/'+key,label,ic,state.tab===key);
+    const options='<option value="" '+(s?'':'selected')+'>Todas las webs</option>'+state.sites.map(x=>'<option value="'+e(x.id)+'" '+(s&&x.id===s.id?'selected':'')+'>'+e(x.name)+'</option>').join('');
+    const site=s?'<p class="side-group">Esta web</p>'+tab('hoy','Plan del sitio','home')+stages.map(st=>tab(st.key,st.label,st.icon)).join('')+tab('conexiones','Conexiones de Google','globe')+tab('ajustes','Configuración','settings'):'';
+    // Google's account is set up once for the team, so the entry must be reachable before opening a web.
+    const first=!s&&state.sites.find(x=>!x.demo);
+    const canTeam=u?.role==='admin'||isDemoAccount();
+    const team='<p class="side-group">Equipo</p>'+link('#/sitios','Mis sitios','sites',!s&&globalPage==='sitios')+'<button type="button" class="side-link" data-action="new-site">'+icon('plus')+'<span>Agregar sitio</span></button>'+link('#/diagnostico','Diagnóstico sin agregar','pulse',!s&&globalPage==='diagnostico')+(first?link('#/sitio/'+encodeURIComponent(first.id)+'/conexiones','Conexiones de Google','globe',false):'')+(canTeam?link('#/usuarios','Usuarios','users',!s&&globalPage==='usuarios'):'');
+    return '<aside class="sidebar" id="sidebar"><div class="side-brand">'+brand+'<button type="button" class="icon-btn side-close" data-nav="close" aria-label="Cerrar menú">'+icon('close')+'</button></div><label class="site-switch">Web activa<select id="site-select">'+options+'</select></label><nav class="side-nav" aria-label="Módulos">'+site+team+'</nav><div class="side-foot"><div class="side-pet"></div><div class="side-user"><span class="avatar" aria-hidden="true">'+e((u.name||u.email||'U')[0].toUpperCase())+'</span><span class="username" title="'+e(u.email||'')+'">'+e(u.name||u.email)+'</span><span class="side-tools"><button type="button" class="icon-btn" data-action="my-ai" aria-label="Mi IA" title="Mi IA">'+icon('spark')+'</button><button type="button" class="icon-btn" data-action="pet-open" aria-label="Abrir mi mascota" title="Mi mascota"><img src="/isotipo.svg" alt="" width="18" height="18"></button><button type="button" class="icon-btn" data-action="logout" aria-label="Cerrar sesión" title="Cerrar sesión">'+icon('out')+'</button></span></div></div></aside>';
   }
   function directory(){
-    const sites=state.sites;
-    const cards=sites.map(x=>'<button class="site-card" data-action="site" data-id="'+e(x.id)+'"><span class="row">'+badge(x.demo?'Ejemplo':x.country||'Web')+icon('arrow')+'</span><h2>'+e(x.name)+'</h2><p class="meta break">'+e(urlLabel(x.url))+'</p><div class="item"><span>Salud técnica</span><strong>'+(x.score==null?'Pendiente':number(x.score)+'/100')+'</strong></div><small>Última revisión · '+e(date(x.lastReviewAt))+'</small></button>').join('');
-    return '<main class="frame directory" id="main" tabindex="-1">'+stageIntro('Espacio del equipo','Mis sitios','Elige entre seguir una web cada día o resolver una consulta puntual.')+'<div class="workspace-switches"><section class="workspace-choice"><p class="eyebrow">Seguimiento diario</p><h2>Agregar un sitio</h2><p>Guarda la web del equipo, conecta Google y sigue las mejoras en el tiempo.</p>'+btn('Agregar sitio','new-site','','primary','plus')+'</section><section class="workspace-choice"><p class="eyebrow">Una sola revisión</p><h2>Diagnóstico sin agregar</h2><p>Analiza una URL autorizada o trae tus archivos. Descarga los hallazgos al terminar.</p>'+btn('Abrir diagnóstico puntual','diagnostic','','secondary','audit')+'</section></div><h2>Webs en tu espacio</h2><div class="site-grid">'+(cards||blank('Todavía no tienes sitios. Agrega una web para iniciar su seguimiento.'))+'</div></main>';
+    const rows=state.sites.map(x=>{
+      const source=(name,on)=>'<span title="'+(on?'Conectada':'Sin conectar')+'">'+badge(name,on?'good':'off')+'</span>';
+      return '<li><a class="site-row" href="#/sitio/'+encodeURIComponent(x.id)+'/hoy"><span class="site-name"><strong>'+e(x.name)+'</strong><small class="break">'+e(urlLabel(x.url))+'</small></span><span class="site-score">'+(x.score==null?'<small>Pendiente</small>':'<strong>'+number(x.score)+'</strong><small>/100</small>')+'</span><span class="site-google">'+(x.demo?badge('Ejemplo','demo'):source('Search Console',x.gsc)+source('GA4',x.ga4))+'</span><small class="site-date">'+e(date(x.lastReviewAt))+'</small>'+icon('arrow')+'</a></li>';
+    }).join('');
+    const list=rows?'<ul class="site-list"><li class="site-head" aria-hidden="true"><span>Web</span><span>Salud</span><span>Google</span><span>Última revisión</span><span></span></li>'+rows+'</ul>':blank('Todavía no tienes sitios. Agrega una web para iniciar su seguimiento.');
+    return '<main class="workspace-main" id="main" tabindex="-1"><header class="page-head"><div><h1>Mis sitios</h1><p>Elige una web para ver su plan, sus datos y sus mejoras.</p></div>'+btn('Agregar sitio','new-site','','primary','plus')+'</header>'+list+'</main>';
   }
   function render(){
     stopMetrics();
@@ -198,7 +212,7 @@ import {mountTeam} from './equipo.js';
     if(!s){
       const standalone=globalPage!=='sitios',team=globalPage==='usuarios';
       const heading=team?'Usuarios del equipo':standalone?'Diagnóstico sin agregar':'Mis sitios';
-      app.innerHTML=top()+(standalone?'<main class="frame directory" id="main" tabindex="-1">'+stageIntro('Espacio del equipo',heading,team?'Crea accesos y elige qué webs puede gestionar cada persona.':'Haz una revisión puntual y descarga tu informe sin registrar la web.')+'<div id="workspace-section"></div></main>':directory());
+      shell(standalone?'<main class="workspace-main" id="main" tabindex="-1">'+stageIntro('',heading,team?'Crea accesos y elige qué webs puede gestionar cada persona.':'Haz una revisión puntual y descarga tu informe sin registrar la web.')+'<div id="workspace-section"></div></main>':directory());
       const container=$('#workspace-section');
       if(team){
         if(state.user.role==='admin')moduleCleanups.push(mountTeam(container,{api,user:state.user,sites:state.sites,show}));
@@ -212,17 +226,14 @@ import {mountTeam} from './equipo.js';
       return;
     }
     const label=sections.find(x=>x[0]===state.tab)?.[1]||'Plan del sitio';
-    const breadcrumb='<div class="workspace-top"><span><button data-action="tab" data-id="hoy">'+e(s.name)+'</button> / '+e(label)+'</span>'+(s.demo?badge('Datos de ejemplo','demo'):badge('Sitio del equipo'))+'</div>';
-    let contents=({hoy:today,auditoria:audit,keywords:keywords,tareas:tasks,revisiones:reviews,conexiones:()=>stageIntro('Fuentes de datos','Conexiones de Google','Sigue la guía ilustrada y verifica la propiedad que corresponde a esta web.')+'<section id="google-guides"></section>',ajustes:settings})[state.tab](s);
-    const guideText={hoy:'Empieza con la próxima acción que tenga evidencia en tu sitio.',auditoria:'Abre una URL para inspeccionar su respuesta, enlaces y señales técnicas.',keywords:'Explora las consultas o prepara un encargo con keywords y long-tail para tu redactor.',tareas:'Revisa el encargo y registra la fecha cuando publiques el cambio.',revisiones:'Compara períodos completos y comprueba qué datos respaldan cada resultado.',ajustes:'Define el objetivo del negocio y conecta las fuentes que usa el equipo.'};
-    const msg=companion(state.tab,{message:guideText[state.tab],compact:true,loading:state.tab==='auditoria'&&reviewing(s),tone:state.tab==='auditoria'&&orderedIssues(s).some(i=>i.severity==='alta')?'warning':'normal'});
-    contents=state.tab==='conexiones'?contents:state.tab==='auditoria'?contents.replace('<section class="panel" id="url-inspector"',msg+'<section class="panel" id="url-inspector"'):contents.replace('</header>','</header>'+msg);
+    const notice=s.demo?'<div class="workspace-top">'+badge('Datos de ejemplo','demo')+'</div>':'';
+    let contents=({hoy:today,auditoria:audit,keywords:keywords,tareas:tasks,revisiones:reviews,conexiones:()=>stageIntro('','Conexiones de Google','Sigue la guía ilustrada y verifica la propiedad que corresponde a esta web.')+'<section id="google-guides"></section>',ajustes:settings})[state.tab](s);
     if(['hoy','revisiones'].includes(state.tab))contents+=analysisShell();
-    app.innerHTML=top()+'<div class="workspace">'+sidebar(s)+'<main class="workspace-main" id="main" tabindex="-1">'+breadcrumb+contents+'</main></div>';
+    shell('<main class="workspace-main" id="main" tabindex="-1">'+notice+contents+'</main>');
     document.title=label+' · '+s.name+' · SEOBESTIA';
     const connectionRoot=$('#google-guides');
     if(connectionRoot)moduleCleanups.push(mountConnections(connectionRoot,{site:s,user:state.user,api,initialSource:connectionSource,onConnected:(source,property)=>{if(source==='gsc')s.gscProperty=property;else s.ga4PropertyId=property;}}));
-    syncMascota({user:state.user,site:s,tab:state.tab});
+    syncMascota({user:state.user,site:s,tab:state.tab,busy:reviewing(s)});
     if(state.tab==='revisiones')startMetrics($('#metrics-dashboard'),s);
     const inspector=$('#url-inspector'), editorial=$('#editorial-desk'), analysis=$('[data-analysis]');
     let lastSummary=inspector?auditSummary(s):'';
@@ -245,8 +256,10 @@ import {mountTeam} from './equipo.js';
     else if(urgent||!s.audit?.coverage?.pages)card=nextCard('Siguiente paso','Empieza por la salud de tu web',urgent?'La revisión detectó un problema de prioridad alta. Comprueba la página afectada antes de preparar contenido.':'Comprueba qué páginas se pueden analizar y si hay problemas que resolver.',advance('auditoria','Abrir diagnóstico'));
     else if(watching)card=nextCard('Siguiente paso','Revisa qué pasó con tu mejora',watching.title,advance('revisiones','Ver seguimiento'));
     else card=nextCard('Siguiente paso','Elige una búsqueda para trabajar','La web ya tiene un diagnóstico. Revisa qué buscan las personas y elige una página para mejorar.',advance('keywords','Elegir una búsqueda'));
-    const activity='<aside class="context-rail"><p class="eyebrow">Estado del sitio</p><h2>De un vistazo</h2>'+detailLine('Puntuación técnica',s.audit?.score==null?'Pendiente':number(s.audit.score)+' de 100')+detailLine('Última revisión',date(s.lastReviewAt,true))+detailLine('Datos de búsqueda hasta',s.dataUntil?date(s.dataUntil):'Sin datos fechados')+'</aside>';
-    return stageIntro('Plan del sitio', 'Tu plan para '+s.name,'Trabaja en una página a la vez. Puedes volver a cualquiera de los cuatro pasos cuando lo necesites.')+card+'<div class="work-layout"><div class="work-main"><section class="panel"><div class="panel-head"><h2>Novedades de la web</h2>'+icon('bell')+'</div>'+((s.alerts||[]).slice(0,4).map(a=>'<div class="item"><div><h3>'+e(a.title)+'</h3><p>'+e(a.message)+'</p></div></div>').join('')||blank('Todavía no hay alertas registradas. Las próximas revisiones aparecerán aquí.'))+btn('Ver las revisiones','tab','revisiones','secondary compact')+'</section></div>'+activity+'</div>';
+    const stat=(label,value)=>'<div class="stat"><small>'+e(label)+'</small><strong>'+e(value)+'</strong></div>';
+    const stats='<div class="stat-strip">'+stat('Salud técnica',s.audit?.score==null?'Pendiente':number(s.audit.score)+' de 100')+stat('Última revisión',date(s.lastReviewAt))+stat('Búsquedas hasta',s.dataUntil?date(s.dataUntil):'Sin datos')+stat('Mejoras abiertas',number(s.tasks.filter(drafting).length))+'</div>';
+    const news=(s.alerts||[]).slice(0,4).map(a=>'<div class="item"><div><h3>'+e(a.title)+'</h3><p class="meta break">'+e(a.message)+'</p></div></div>').join('')||blank('Todavía no hay alertas registradas. Las próximas revisiones aparecerán aquí.');
+    return '<header class="step-intro"><h1>'+e(s.name)+'</h1><p class="meta break">'+e(urlLabel(s.url))+' · '+e(s.country)+'</p></header>'+stats+card+'<section class="panel"><div class="panel-head"><h2>Novedades de la web</h2>'+btn('Ver las revisiones','tab','revisiones','secondary compact')+'</div>'+news+'</section>';
   }
   function describe(x){if(x==null)return 'Sin evaluar';if(typeof x!=='object')return String(x);return Object.entries(x).filter(([k,v])=>typeof v!=='object'&&v!=null).map(([k,v])=>`${human(k)}: ${v}`).join(' · ')||'Sin detalle';}
   function auditSummary(s){
@@ -265,9 +278,31 @@ import {mountTeam} from './equipo.js';
     const rerun=btn(active?'Actualizar estado':completed?'Volver a revisar':'Revisar la web',active?'retry':'run','',inspect||next&&!coverage.partial?'secondary compact':'primary compact','review');
     return '<div class="inspect-score"><p class="eyebrow">Salud técnica</p><strong class="score-number">'+e(score)+'</strong><p>Los controles aprobados suman puntos. Los de mayor importancia pesan más.</p></div><div class="inspect-takeaway"><h2>'+e(title)+'</h2>'+priority+'<p class="meta">'+e(coverageText)+'</p><div class="actions">'+inspect+next+rerun+'</div></div>';
   }
+  function speedPanel(s){
+    const p=s.pagespeed;
+    if(!p&&!s.pagespeedError)return '';
+    const seconds=ms=>ms==null?'Sin datos':(ms/1000).toLocaleString('es-CL',{maximumFractionDigits:1})+' s';
+    const device=(label,d)=>{
+      if(!d)return '<div class="panel"><p class="eyebrow">'+label+'</p><p class="meta">Sin resultado en la última medición.</p></div>';
+      const real=d.field?'Personas reales ('+e(d.field.scope)+'): LCP '+seconds(d.field.lcpMs)+' · INP '+(d.field.inpMs==null?'Sin datos':number(d.field.inpMs)+' ms')+' · CLS '+(d.field.cls==null?'Sin datos':e(d.field.cls)):'Sin datos de personas reales: Chrome no reúne tráfico suficiente.';
+      return '<div class="panel"><p class="eyebrow">'+label+'</p><strong class="score-number">'+(d.performance==null?'Sin datos':number(d.performance)+' / 100')+'</strong><p class="meta">Accesibilidad '+e(d.accessibility??'-')+' · Buenas prácticas '+e(d.bestPractices??'-')+' · SEO '+e(d.seo??'-')+'</p><p class="meta">Prueba: LCP '+seconds(d.lab.lcpMs)+' · TBT '+(d.lab.tbtMs==null?'Sin datos':number(Math.round(d.lab.tbtMs))+' ms')+' · CLS '+(d.lab.cls==null?'Sin datos':e(d.lab.cls.toFixed(3)))+'</p><p class="meta">'+real+'</p></div>';
+    };
+    const error=s.pagespeedError?'<p class="meta">'+e(s.pagespeedError)+'</p>':'';
+    return '<div class="section-head"><div><p class="eyebrow">Google PageSpeed</p><h2>Velocidad de la página de inicio</h2>'+(p?'<p class="meta">Medido el '+e(date(p.at,true))+' · No forma parte de la nota técnica</p>':'')+'</div></div>'+error+(p?'<div class="grid summary-grid">'+device('Móvil',p.mobile)+device('Escritorio',p.desktop)+'</div>':'');
+  }
+  function googlePanel(s){
+    const i=s.indexSummary,maps=s.gscSitemaps,g=s.gtm;
+    if(!i&&!maps&&!g&&!s.googleStatusError)return '';
+    const listOf=(items,line)=>'<details><summary>Ver detalle</summary><ul>'+items.map(x=>'<li class="meta break">'+line(x)+'</li>').join('')+'</ul></details>';
+    const index=i?'<div class="panel"><p class="eyebrow">Indexación según Google</p><strong class="score-number">'+number(i.indexed)+' de '+number(i.checked)+'</strong><p class="meta">Páginas comprobadas que Google declara indexadas. Cada revisión comprueba hasta 25 más.</p>'+(i.problemCount?'<p class="meta">'+number(i.problemCount)+' por revisar.</p>'+listOf(i.problems,x=>e(urlLabel(x.url))+' · '+e(x.coverage||x.verdict)):'')+(i.canonicalCount?'<p class="meta">'+number(i.canonicalCount)+' con otra canónica elegida por Google.</p>'+listOf(i.canonical,x=>e(urlLabel(x.url))+' · Google eligió '+e(x.googleCanonical)):'')+'</div>':'';
+    const errors=(maps||[]).reduce((n,m)=>n+m.errors,0);
+    const sitemaps=maps?'<div class="panel"><p class="eyebrow">Sitemaps enviados</p><strong class="score-number">'+number(maps.length)+'</strong><p class="meta">'+(maps.length?number(errors)+' errores en Search Console.':'Search Console no registra ninguno enviado.')+'</p>'+(maps.length?listOf(maps,m=>e(m.path)+' · '+number(m.urls)+' URLs · '+number(m.errors)+' errores · leído '+e(m.lastDownloaded?date(m.lastDownloaded):'pendiente')):'')+'</div>':'';
+    const tags=g?'<div class="panel"><p class="eyebrow">Etiquetas de Tag Manager</p><strong class="score-number">'+number(g.containers.reduce((n,c)=>n+c.tagCount,0))+'</strong><p class="meta">'+(g.containers.map(c=>e(c.id)+' · versión '+e(c.version)).join(' / ')||'Sin contenedores accesibles.')+'</p>'+(g.notFound?.length?'<p class="meta">Sin acceso a '+e(g.notFound.join(', '))+'.</p>':'')+(g.missingKeyEvents?.length?'<p class="meta">Eventos clave de Analytics que no salen de una etiqueta de este contenedor: '+e(g.missingKeyEvents.join(', '))+'. Comprueba si se envían desde el sitio.</p>':'')+(g.containers.length?listOf(g.containers.flatMap(c=>c.tags),t=>e(t.name)+(t.event?' · '+e(t.event):'')+(t.paused?' · en pausa':'')):'')+'</div>':'';
+    return '<div class="section-head"><div><p class="eyebrow">Datos de Google</p><h2>Cómo ve Google esta web</h2><p class="meta">Solo lectura · No forma parte de la nota técnica</p></div></div>'+(s.googleStatusError?'<p class="meta">'+e(s.googleStatusError)+'</p>':'')+'<div class="grid summary-grid">'+index+sitemaps+tags+'</div>';
+  }
   function audit(s){
     return stageIntro('auditoria','Auditar','Descubre qué necesita atención y abre cada problema para ver la página afectada y cómo corregirlo.')+
-      '<section class="inspect-hero" aria-label="Resultado del diagnóstico">'+auditSummary(s)+'</section>'+
+      '<section class="inspect-hero" aria-label="Resultado del diagnóstico">'+auditSummary(s)+'</section>'+speedPanel(s)+googlePanel(s)+
       '<section class="panel" id="url-inspector" aria-label="Inspector de páginas"></section>';
   }
   function issue(id){const i=state.site.audit?.issues.find(x=>x.id===id);if(!i)return;
@@ -322,7 +357,7 @@ import {mountTeam} from './equipo.js';
     const logs=(s.reviews||[]).map(r=>'<div class="item"><div><h3>'+e(date(r.at,true))+'</h3><p>'+e(r.message)+'</p>'+(r.changes?.length?'<details><summary>Ver cambios por página ('+r.changes.length+')</summary>'+r.changes.map(c=>'<p class="meta break">'+e(typeof c==='string'?c:[c.kind,c.url].filter(Boolean).join(' · '))+'</p>').join('')+'</details>':'')+'<small>Páginas comprobadas · '+number(r.pagesChecked)+'</small></div>'+badge(human(r.status),warn(r.status))+'</div>').join('');
     return stageIntro('revisiones','Medir','Sigue las búsquedas, las visitas y las citas en respuestas de IA. Cada indicador conserva su fuente y su período.')+
     '<div class="actions">'+btn('Ver la interpretación semanal','weekly-report','','secondary compact','review')+'</div><div id="metrics-dashboard" aria-label="Medición del sitio"><p class="empty" role="status">Cargando métricas…</p></div>'+
-    '<section class="panel"><div class="panel-head"><div><p class="eyebrow">Evidencia manual</p><h2>Respuestas de IA</h2></div>'+btn('Registrar observación de IA','ai-capture','','secondary compact','plus')+'</div><p class="meta">Añade una pregunta que hayas probado y declara si el motor mencionó la marca o citó una página del sitio.</p></section>'+
+    '<section class="panel"><div class="panel-head"><div><p class="eyebrow">Evidencia de IA</p><h2>Respuestas de IA</h2></div><div class="actions">'+btn('Configurar panel automático','ai-panel','','secondary compact','review')+btn('Registrar observación de IA','ai-capture','','secondary compact','plus')+'</div></div><p class="meta">'+(s.aiPrompts?.length?'Panel activo con '+number(s.aiPrompts.length)+' preguntas. Hace una pasada periódica con la clave del servidor y la lectura aparece en Medir.':'Define las preguntas del panel para medir de forma periódica, o añade una pregunta que hayas probado y declara si el motor mencionó la marca o citó una página del sitio.')+'</p></section>'+
     (active.length?'<section class="panel"><div class="panel-head"><h2>Mejoras en seguimiento</h2>'+badge(String(active.length))+'</div>'+monitored+'</section>':next)+'<section class="panel"><div class="panel-head"><h2>Revisiones diarias</h2>'+btn('Revisar ahora','run','','secondary compact','review')+'</div><p class="meta">Datos de búsqueda hasta · '+e(s.dataUntil?date(s.dataUntil):'Sin fecha de datos')+'</p>'+((s.jobs||[]).length?'<details><summary>Estado de los trabajos recientes</summary>'+s.jobs.slice(0,5).map(j=>badge(human(j.status),warn(j.status))).join(' ')+'</details>':'')+(logs||blank('El historial aparecerá después de la primera revisión.'))+'</section>';
   }
   function settings(s){
@@ -408,6 +443,11 @@ async function siteMembers(){
   }
   function importCsv(){show('Importar consultas',`<div class="fields"><p>Usa un CSV exportado o pega una tabla. El encabezado <strong>Consulta</strong> es obligatorio.</p><label>Archivo CSV o TSV<input type="file" id="csv-file" accept=".csv,.tsv,text/csv,text/tab-separated-values"></label><label>Contenido del archivo<textarea rows="6" name="csv" id="csv-text" required placeholder="Consulta;Página;Fecha;Impresiones;Clics;Posición"></textarea></label><small>Hasta 5.000 filas y 1,5 MB. Fechas en formato AAAA-MM-DD. Si falta una métrica, deja vacía su celda.</small></div>`,async data=>{await api(sitePath('/import'),'POST',data);return 'Consultas importadas.';},'Importar consultas');}
   function editGoal(){show('Objetivo comercial','<div class="fields">'+field('¿Qué acción quieres que hagan los visitantes?','businessGoal',{value:state.site.businessGoal,placeholder:'Por ejemplo, solicitudes de presupuesto',max:240})+'<small>Se usará para valorar la utilidad comercial de cada oportunidad.</small></div>',async data=>{await api(sitePath('/goal'),'PATCH',data);return 'Objetivo comercial guardado.';},'Guardar objetivo');}
+  function configureAiPanel(){
+    const s=state.site,kinds=[['informativa','Preguntas informativas'],['recomendacion','Preguntas de recomendación'],['marca','Preguntas sobre la marca'],['control','Preguntas de control']];
+    const lines=v=>String(v||'').split('\n').map(x=>x.trim()).filter(Boolean);
+    show('Panel automático de IA','<div class="fields"><p>Hace estas preguntas a OpenAI con búsqueda una vez por pasada, semanal por defecto. Cada pregunta cuesta cerca de US$0,013 en esa cuenta. Mantén las mismas preguntas para que el período siga siendo comparable. Escribe una por línea, con las palabras que usaría una persona.</p><label>Nombres de la marca<textarea name="brands" rows="2" maxlength="500">'+e((s.aiBrands||[]).join('\n'))+'</textarea></label>'+kinds.map(([type,label])=>'<label>'+label+'<textarea name="'+type+'" rows="3">'+e((s.aiPrompts||[]).filter(p=>p.type===type).map(p=>p.text).join('\n'))+'</textarea></label>').join('')+'<small>Hasta 12 preguntas en total. El control trata un tema que no vas a modificar: si también cambia, el motor pudo cambiar y no tu contenido. No incluyas datos de clientes.</small></div>',async data=>{await api(sitePath('/ai-panel'),'PATCH',{brands:lines(data.brands),prompts:kinds.flatMap(([type])=>lines(data[type]).map(text=>({text,type})))});return 'Panel guardado.';},'Guardar panel');
+  }
   function captureAI(){
     show('Registrar observación de IA','<div class="fields"><p>Registra una respuesta que hayas comprobado. Una mención de la marca y un enlace a tu sitio son evidencias diferentes.</p><div class="fields two"><label>Motor<select name="engine">'+['ChatGPT','Gemini','Perplexity','Claude','Copilot','AI Overviews','AI Mode','Otro'].map(x=>'<option>'+e(x)+'</option>').join('')+'</select></label>'+field('Fecha de la consulta','date',{type:'date',value:new Intl.DateTimeFormat('sv-SE').format(new Date())})+'</div><label>Pregunta exacta<textarea name="prompt" rows="3" required maxlength="1200"></textarea></label>'+field('URL de tu sitio citada en la respuesta (opcional)','citedUrl',{type:'url',placeholder:state.site.url,required:false})+'<label class="check"><input type="checkbox" name="mentioned"> La respuesta mencionó la marca</label><small>Si tampoco hubo cita, deja la URL vacía. Esa observación también cuenta para la muestra.</small></div>',async data=>{await api(sitePath('/ai-observations'),'POST',{engine:data.engine,date:data.date,prompt:data.prompt,citedUrl:data.citedUrl.trim(),mentioned:data.mentioned==='on'});return 'Observación registrada en la muestra del sitio.';},'Guardar observación');
   }
@@ -425,7 +465,7 @@ async function siteMembers(){
     if(form.id==='invite-form'){try{await joinTeam(data);}catch(err){errorMsg(err);}finally{pending=false;submit.disabled=false;}return;}
     try{if(form.id==='login-form'){await api('login','POST',data);await signedIn();}else if(dialogAction){const result=await dialogAction(data,form);dialog.close();if(result?.signupEmail){login({email:result.signupEmail,message:result.message});$('#login-form [name=password]').focus();return;}if(result?.destination)destination(result.destination);else if(result?.tab)route(state.site.id,result.tab);else await loadRoute();if(result)toast(result.message||result);}}catch(err){errorMsg(err);}finally{pending=false;submit.disabled=false;}
   });
-  document.addEventListener('click',async ev=>{if(ev.target.closest('.skip')){ev.preventDefault();$('#main')?.focus();return;}const b=ev.target.closest('button[data-action]');if(!b||b.disabled||pending)return;const id=b.dataset.id,act=b.dataset.action; b.disabled=true;
+  document.addEventListener('click',async ev=>{if(ev.target.closest('.skip')){ev.preventDefault();$('#main')?.focus();return;}const toggle=ev.target.closest('[data-nav]');if(toggle){setNav(toggle.dataset.nav==='open');return;}if(ev.target.closest('.sidebar a'))$('.shell')?.removeAttribute('data-nav-open');const b=ev.target.closest('button[data-action]');if(!b||b.disabled||pending)return;const id=b.dataset.id,act=b.dataset.action; b.disabled=true;
     try{switch(act){
       case 'close':dialog.close();break;
       case 'pet-open':openMascota();break;
@@ -469,6 +509,7 @@ async function siteMembers(){
       case 'gsc':case 'ga4':connectionSource=act;route(state.site.id,'conexiones');break;
       case 'edit-goal':editGoal();break;
       case 'ai-capture':captureAI();break;
+      case 'ai-panel':configureAiPanel();break;
       case 'kw-group':{
         state.filter=id;state.page=0;
         const tmp=document.createElement('template');tmp.innerHTML=keywords(state.site);
@@ -498,6 +539,7 @@ async function siteMembers(){
       outcome.value=(target===validTarget(o?.target)&&o?.expectedOutcome)||targetPlan[target];
     }
   });
+  document.addEventListener('keydown',ev=>{if(ev.key==='Escape'&&$('.shell[data-nav-open]')&&!dialog.open)setNav(false);});
   window.addEventListener('hashchange',()=>{privateLink=takePrivateLink();focusOnNavigation=true;if(dialog.open)dialog.close();state.q='';state.filter='all';state.page=0;state.longTail=false;loadRoute();});
   try{const info=await api('session');Object.assign(state,{user:info.user,demoAvailable:info.demoAvailable,setupAvailable:info.setupAvailable,localAdminAvailable:info.localAdminAvailable,signupAvailable:info.signupAvailable});if(privateLink)privateScreen();else if(state.user)await loadRoute();else login();}catch(err){app.innerHTML=`<main id="main" tabindex="-1" class="loading"><h2>Conexión interrumpida</h2><p role="alert">${e(err.message)}</p><a class="btn" href="/">Volver a abrir</a></main>`;}
 })();

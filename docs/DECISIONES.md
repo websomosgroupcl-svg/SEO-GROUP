@@ -19,6 +19,9 @@ La especificación de producto conserva autoridad sobre las funciones y la gratu
 | ADR-011 | Presupuesto inicial para 3 sitios pequeños y 5 miembros. | Supuesto para medir, no límite universal probado. Controlar créditos, cómputo, almacenamiento y transferencia antes de crecer. |
 | ADR-012 | Accesos propios de la aplicación. | Los usuarios del producto no necesitan asientos del proveedor de hosting. Administración privada sin registro público ni correo pagado. |
 | ADR-013 | Plan alternativo Node + PostgreSQL sobre servidor existente. | Mantener lógica y datos; requerirá configurar despliegue, red, cron y respaldo. No afirmar que ese hardware ya existe. |
+| ADR-014 | Visibilidad en IA medida como frecuencia con rango, en series separadas: API con búsqueda periódica y aplicaciones reales solo como calibración. | Las respuestas varían entre repeticiones y la API no replica las aplicaciones. La medición en navegador sigue fuera de la aplicación, por sus términos de uso y porque no puede correr en Netlify. |
+| ADR-015 | Varias cuentas de administrador. | Decisión del equipo el 6 de noviembre de 2026. Un administrador puede crear otros y cada uno ve todos los sitios reales. |
+| ADR-016 | Panel de IA con OpenAI, opcional y prepagado. Clasificador con Gemini gratuito. | Excepción a ADR-010, propuesta por el equipo el 6 de noviembre de 2026. La búsqueda de Gemini dejó de ser gratuita para proyectos nuevos. Solo gasta al configurar la clave, y el saldo sin recarga automática limita el gasto. |
 
 ## Condiciones de salida del piloto técnico
 

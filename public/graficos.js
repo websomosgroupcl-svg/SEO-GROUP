@@ -57,16 +57,6 @@ export function compareGraphic(d,options) {
   return group('Comparar métricas entre períodos','<div class="gfx-chips">'+legend+'</div>'+details(panels));
 }
 
-export function enginesGraphic(engines=[]) {
-  if(!engines.length)return '';
-  const entries=engines.map((r,i)=>button(i,'<span class="gfx-engine-name">'+esc(r.engine)+'</span><span class="gfx-paired">'+[['Menciones',r.mentionRate,colors[0]],['Citas',r.citationRate,colors[1]]].map(([name,rate,color])=>'<span><small>'+name+'</small>'+track(rate,color)+'<b>'+pct(rate)+'</b></span>').join('')+'</span>',i===0)).join('');
-  const panels=engines.map(r=>{
-    const detail=(label,count,known)=>number(known)&&known>0?label+' en '+fmt(count)+' de '+fmt(known)+' respuestas evaluadas.':'Faltan respuestas evaluadas para '+label.toLocaleLowerCase('es')+'.';
-    return copy(r.engine+' · '+fmt(r.samples)+' respuestas registradas',detail('Menciones',r.mentions,r.mentionsKnown)+' '+detail('Citas',r.citations,r.citationsKnown)+' Compara motores que hayan recibido preguntas equivalentes.');
-  });
-  return group('Menciones y citas por motor','<div class="gfx-engine-list">'+entries+'</div>'+details(panels));
-}
-
 export function healthGraphic(audit) {
   const dims=audit.dimensions||[];
   if(!dims.length)return '<p class="meta">Ejecuta una revisión para evaluar las dimensiones técnicas.</p>';

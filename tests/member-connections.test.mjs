@@ -26,6 +26,9 @@ async function fixture(t){
   const calls=[];let onVerify=async()=>{};
   const googleTransport={token:async()=>'token-falso',request:async(url,options)=>{
     calls.push({url,body:options?.body?JSON.parse(options.body):null});
+    if(url.endsWith('/webmasters/v3/sites'))return Response.json({siteEntry:[{siteUrl:'https://taller.example/',permissionLevel:'siteOwner'},{siteUrl:'https://sinficha.example/',permissionLevel:'siteOwner'}]});
+    if(url.includes('accountSummaries'))return Response.json({accountSummaries:[{propertySummaries:[{property:'properties/145',displayName:'Taller'}]}]});
+    if(url.includes('tagmanager'))return Response.json(url.endsWith('/accounts')?{account:[{path:'accounts/1'}]}:{container:[{publicId:'GTM-AAAA1',name:'Taller'}]});
     if(url.includes('webmasters')){await onVerify();return Response.json({siteUrl:decodeURIComponent(url.split('/sites/')[1]),permissionLevel:'siteRestrictedUser'});}
     if(url.includes('/dataStreams'))return Response.json({dataStreams:[{name:'properties/145/dataStreams/567',type:'WEB_DATA_STREAM',webStreamData:{defaultUri:url.includes('144/')?'https://otro.example/':'https://taller.example/'}}]});
     assert(url.endsWith(':runReport'));return Response.json({rows:[]});
@@ -76,10 +79,27 @@ test('GA4 del miembro protege otros dominios y carpetas, filtra historial y rese
   assert.equal((await bind('assigned','145','raiz',{confirmLiveScope:true})).status,403);assert.equal(calls.length,0);
   assert.equal((await bind('assigned','144')).status,400);assert.equal(calls.filter(c=>c.url.endsWith(':runReport')).length,0);
   const accepted=await bind('assigned','145');assert.equal(accepted.status,200);assert.equal(accepted.data.liveReviewRequired,true);
-  const reports=calls.filter(c=>c.url.endsWith(':runReport'));assert.equal(reports.length,2);
-  for(const {body} of reports)assert.deepEqual(body.dimensionFilter.andGroup.expressions.map(e=>[e.filter.fieldName,e.filter.stringFilter.value]),[['streamId','567'],['hostName','taller.example']]);
+  const reports=calls.filter(c=>c.url.endsWith(':runReport'));assert.equal(reports.length,3);
+  for(const {body} of reports)assert.deepEqual(body.dimensionFilter.andGroup.expressions.slice(0,2).map(e=>[e.filter.fieldName,e.filter.stringFilter.value]),[['streamId','567'],['hostName','taller.example']]);
   const live=await req('assigned','sites/raiz/live');assert.equal(live.data.status,'unavailable');assert.equal(live.data.activeUsers,null);
   assert.equal((await bind('admin','145')).data.liveReviewRequired,true);
   assert.equal((await bind('admin','145','raiz',{confirmLiveScope:true})).data.liveReviewRequired,false);
   assert.equal((await bind('assigned','145')).data.liveReviewRequired,false);assert.equal((await store.read()).sites[0].ga4LiveReviewRequired,false);
+});
+
+test('el administrador revisa los accesos y cada web se vincula sola sin reemplazar lo ya vinculado',async t=>{
+  const {req,store}=await fixture(t);
+  assert.equal((await req('assigned','conexiones/descubrir','POST',{})).status,403);
+  await store.mutate(st=>{st.sites.find(s=>s.id==='carpeta').gscProperty='https://taller.example/cliente/';});
+  const r=await req('admin','conexiones/descubrir','POST',{});
+  assert.equal(r.status,200);assert.equal(r.data.linkedNow,2);
+  assert.deepEqual(r.data.sites.map(s=>[s.id,s.gsc,s.ga4]),[['raiz','https://taller.example/','145'],['carpeta','https://taller.example/cliente/',null]]);
+  assert.deepEqual(r.data.unused,{gsc:['https://sinficha.example/'],ga4:[]});
+  assert.deepEqual(r.data.gtm,[{id:'GTM-AAAA1',name:'Taller'}]);
+  const saved=(await store.read()).sites;
+  assert.equal(saved[0].gscProperty,'https://taller.example/');
+  assert.deepEqual([saved[0].ga4PropertyId,saved[0].ga4StreamId],['145','567']);
+  assert(saved[0].ga4UpdatedAt,'trae el histórico al vincular');
+  assert.equal(saved[1].gscProperty,'https://taller.example/cliente/');
+  assert.equal((await req('admin','conexiones/descubrir','POST',{})).data.linkedNow,0);
 });
